@@ -1,4 +1,5 @@
 import Topbar from "../../components/topbar/Topbar";
+import BottomBar from "../../components/bottombar/BottomBar";
 import Dashboard1 from "../../components/Dashboard/Dashboard";
 
 const Dashboard = () => {
@@ -8,6 +9,7 @@ const Dashboard = () => {
       <div className="pt-14">
         <Dashboard1/>
       </div>
+      <BottomBar/>
     </>
   );
 };

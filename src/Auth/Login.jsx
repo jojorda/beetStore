@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../assets/logo.png";
 import Bg from "../assets/bg.png";
@@ -8,7 +8,7 @@ import Telp from "../assets/telp.png";
 
 import { LoginUser, RegisterUser, reset } from "../features/authSlice";
 import { useDispatch, useSelector } from "react-redux";
-import Swal from "sweetalert2";
+import { ToastContainer } from "react-toastify";
 
 const Login = () => {
   const [openTab, setOpenTab] = useState(1);
@@ -19,26 +19,28 @@ const Login = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user, userRegister, isSuccess } = useSelector((state) => state.auth);
+  const { user, userRegister, isSuccess, isLoading } = useSelector(
+    (state) => state.auth
+  );
 
   useEffect(() => {
     if (user || isSuccess) {
-      //
-
       navigate("/dashboard");
-    }
-    // Authorization = "Bearer" + localStorage.getItem("token");
-    dispatch(reset());
-  }, [user, isSuccess, dispatch, navigate]);
-  useEffect(() => {
-    if (userRegister || isSuccess) {
-      //
-      
+      // window.location.reload();
+    } else if(userRegister || isSuccess) {
       navigate("/");
     }
-    // Authorization = "Bearer" + localStorage.getItem("token");
     dispatch(reset());
-  }, [userRegister, isSuccess, dispatch, navigate]);
+  }, [user, isSuccess,userRegister , dispatch, navigate]);
+  // useEffect(() => {
+  //   if (userRegister || isSuccess) {
+  //     //
+      
+  //     // window.location.reload();
+  //   }
+  //   // Authorization = "Bearer" + localStorage.getItem("token");
+  //   dispatch(reset());
+  // }, [userRegister, isSuccess, dispatch, navigate]);
 
   const Auth = (e) => {
     e.preventDefault();
@@ -187,9 +189,20 @@ const Login = () => {
                   <div className="mt-6 ">
                     <button
                       type="submit"
-                      className="shadow-lg w-full px-5 py-1  text-white  bg-[#6E205E] rounded-lg hover:bg-[#8f397c] focus:outline-none focus:bg-[#8f397c]"
+                      className="shadow-lg  px-5 py-1 pr-10 pl-10  text-white  bg-[#6E205E] rounded-lg hover:bg-[#8f397c] focus:outline-none focus:bg-[#8f397c]"
                     >
-                      Login
+                      {isLoading ? (
+                        <div className="flex">
+                          <div className="h-4 w-4 mt-1 mr-2 animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em] text-primary motion-reduce:animate-[spin_1.5s_linear_infinite]">
+                            {/* <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+                              Loading...
+                            </span> */}
+                          </div>
+                          <div>Loading...</div>
+                        </div>
+                      ) : (
+                        "Login"
+                      )}
                     </button>
                   </div>
                 </div>
@@ -291,13 +304,25 @@ const Login = () => {
                   </label>
                 </div>
                 <div className="flex">
-                  <div className="w-2/3"></div>
+                  <div className="w-2/4"></div>
                   <div>
                     <button
                       type="submit"
-                      className="shadow-lg w-full px-5 py-1  text-white  bg-[#6E205E] rounded-lg hover:bg-[#8f397c]  focus:bg-[#8f397c]"
+                      className="shadow-lg  ml-12 pr-10 pl-10 px-5 py-1  text-white  bg-[#6E205E] rounded-lg hover:bg-[#8f397c]  focus:bg-[#8f397c]"
                     >
-                      Sign Up
+                      {" "}
+                      {isLoading ? (
+                        <div className="flex">
+                          <div className="h-4 w-4 mt-1 mr-2 animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em] text-primary motion-reduce:animate-[spin_1.5s_linear_infinite]">
+                            {/* <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+                            Loading...
+                          </span> */}
+                          </div>
+                          <div>Loading...</div>
+                        </div>
+                      ) : (
+                        "Sign Up"
+                      )}
                     </button>
                   </div>
                 </div>
@@ -327,13 +352,14 @@ const Login = () => {
         <div className={openTab === 2 ? "block" : "hidden"}>
           <div className=" px-11 text-sm text-center md:text-left">
             <Link
-              className="text-gray-500 no-underline hover:no-underline w-full pb-6 text-sm text-center md:text-left"
+              className="text-gray-500 no-underline hover:no-underline w-full pb-5 text-sm text-center md:text-left"
               to={"#"}
             >
               © BeetStore 2023
             </Link>
           </div>
         </div>
+        <ToastContainer />
       </div>
     </>
   );

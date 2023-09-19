@@ -8,3 +8,18 @@ export default defineConfig({
   },
   plugins: [react()],
 })
+
+// export default defineConfig({
+//   server: {
+//     port: 8081,
+//     proxy: {
+//       '/api/v1': {
+//         target: 'https://api.beetpos.com',
+//         changeOrigin: true,
+//         // Opsional: PathRewrite untuk mengubah path permintaan jika diperlukan
+//         // pathRewrite: { '^/api/v1/auth/customer/login': '' },
+//       },
+//     },
+//     plugins: [react()],
+//   },
+// });

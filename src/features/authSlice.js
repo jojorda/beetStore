@@ -4,6 +4,7 @@ import Swal from "sweetalert2";
 
 const initialState = {
   user: null,
+  userRegister: null,
   isError: false,
   isSucces: false,
   isLoading: false,
@@ -34,7 +35,7 @@ export const LoginUser = createAsyncThunk("user/loginUser", async (user, thunkAP
       const Toast = Swal.mixin({
         toast: true,
         position: "top-right",
-        iconColor: 'white',
+        iconColor: 'red',
         customClass: {
           popup: 'colored-toast'
         },
@@ -63,7 +64,7 @@ export const RegisterUser = createAsyncThunk("user/RegisterUser", async (userReg
     const Toast = Swal.mixin({
       toast: true,
       position: "top-right",
-      iconColor: "white",
+      iconColor: "green",
       customClass: {
         popup: "colored-toast",
       },
@@ -83,7 +84,7 @@ export const RegisterUser = createAsyncThunk("user/RegisterUser", async (userReg
       const Toast = Swal.mixin({
         toast: true,
         position: "top-right",
-        iconColor: 'white',
+        iconColor: 'red',
         customClass: {
           popup: 'colored-toast'
         },
@@ -162,6 +163,7 @@ export const authSlice = createSlice({
     reset: (state) => initialState,
   },
   extraReducers: (builder) => {
+    //LoginUser
     builder.addCase(LoginUser.pending, (state) => {
       state.isLoading = true;
     });
@@ -176,6 +178,21 @@ export const authSlice = createSlice({
       state.message = action.payload;
     });
 
+    //RegisterUser
+    builder.addCase(RegisterUser.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(RegisterUser.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.isSucces = true;
+      state.user = action.payload;
+    });
+    builder.addCase(RegisterUser.rejected, (state, action) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.message = action.payload;
+    });
+
     // get user Login
     builder.addCase(getMe.pending, (state) => {
       state.isLoading = true;
@@ -183,7 +200,7 @@ export const authSlice = createSlice({
     builder.addCase(getMe.fulfilled, (state, action) => {
       state.isLoading = false;
       state.isSucces = true;
-      state.user = action.payload;
+      state.userRegister = action.payload;
     });
     builder.addCase(getMe.rejected, (state, action) => {
       state.isLoading = false;

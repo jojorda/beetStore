@@ -1,3 +1,67 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@keyframes zoomIn {
+    from {
+      opacity: 0;
+      transform: scale3d(.6, .6, .6);
+    }
+  
+    50% {
+      opacity: 4;
+    }
+  }
+  
+  .zoomIn {
+    animation-name: zoomIn;
+  }
+  
+  @keyframes zoomOut {
+    from {
+      opacity: 1;
+    }
+  
+    50% {
+      opacity: 0;
+      transform: scale3d(.3, .3, .3);
+    }
+  
+    to {
+      opacity: 0;
+    }
+  }
+  .swiper {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
+  
+    /* Center slide text vertically */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .swiper-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+.swiper-button-prev,
+.swiper-button-next {
+  width: 20px;
+  height: 20px;
+}
+
+/* Misalnya, mengubah ukuran ikon panah */
+.swiper-button-prev::after,
+.swiper-button-next::after {
+  font-size: 15px;
+}
+  
