@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const BottomBar = () => {
   return (
     <footer className="text-black py-6">
-      <hr className="h-1 bg-[#6E205E] border-0 mb-10" />
+      <hr className="h-1 bg-gray-200 border-0 mb-10" />
       <div className="container mx-auto">
         <div className="flex flex-col lg:flex-row justify-between items-center">
           <div className="text-center lg:text-left mb-4 lg:mb-0">
@@ -13,7 +13,7 @@ const BottomBar = () => {
               Lorem ipsum dolor sit amet, consectetur adipiscing elit.
             </p>
           </div>
-          <div className="text-center lg:text-left mb-4 lg:mb-0">
+          <div className="text-center lg:text-left lg:mr-28 mb-4 lg:mb-0">
             <h2 className="text-xl font-semibold">Hubungi Kami</h2>
             <p className="text-sm mt-2 text-gray-700">
               Email: info@example.com

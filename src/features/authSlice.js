@@ -22,10 +22,10 @@ export const LoginUser = createAsyncThunk("user/loginUser", async (user, thunkAP
     });
     // withCredentials = false
 
-    // console.log(response);
+    // console.log(response.data.data.payload.customer_account_id);
     // console.log(response.data?.data?.token);
     localStorage.setItem("token", response.data?.data?.token, true);
-    // localStorage.setItem("user", JSON.stringify(response.data?.data?.token.result), true);
+    localStorage.setItem("user", response.data.data.payload.customer_account_id, true);
     // console.log("Bearer", response);
     // console.log(response.data);
 
@@ -58,7 +58,7 @@ export const RegisterUser = createAsyncThunk("user/RegisterUser", async (userReg
     const response = await axios.post(`${API_URL}/api/v1/auth/customer/register`, {
       email: userRegister.email,
       password: userRegister.password,
-      phoneNumber: userRegister.phoneNumber,
+      phoneNumber: userRegister.phone_number,
     });
 
     const Toast = Swal.mixin({
@@ -76,9 +76,9 @@ export const RegisterUser = createAsyncThunk("user/RegisterUser", async (userReg
       icon: "success",
       text: "Register Success",
     });
-    // console.log(response);
+    console.log(response);
     
-    return response.data;
+    // return response.data;
   } catch (error) {
     if (error.response) {
       const Toast = Swal.mixin({

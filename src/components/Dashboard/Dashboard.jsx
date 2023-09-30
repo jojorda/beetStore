@@ -1,6 +1,5 @@
-import { Link } from "react-router-dom";
-import Ds from "../../assets/dasboard.png";
-import Bs from "../../assets/bs.png";
+import bnr from "../../assets/bnr.png";
+import bnr2 from "../../assets/bnr2.png";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Loading from "../Loading/Loading";
@@ -8,19 +7,19 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
-// import required modules
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
-
-import Category from "../Category/Category";
-import ProductList from "../Products/ProductList"
-
+import Outlet from "../Outlet/Outlet";
+import Topbar from "../topbar/Topbar";
+import { debounce } from "lodash";
 const Dashboard = () => {
-  const [merchant, setMerchant] = useState([]);
+  const [searchTerm, setSearchTerm] = useState([]);
+  const [searchTermOutlet, setSearchTermOutlet] = useState([]);
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error] = useState(null);
-
+  const [showScrollButton, setShowScrollButton] = useState(false);
+  const [outlet, setOutlet] = useState([]);
   useEffect(() => {
-    const getMerchant = async () => {
+    const getOutlet = async () => {
       try {
         const API_URL = import.meta.env.VITE_API_KEY;
         const token = localStorage.getItem("token");
@@ -30,137 +29,152 @@ const Dashboard = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        setMerchant(response.data.data);
+        setOutlet(response.data.data);
+        setSearchTermOutlet(response.data.data);
         setLoading(false);
         // console.log(response);
       } catch (error) {
         if (error.response) {
           setLoading(false);
-          // setMsg(error.response.data.msg);
         }
       }
     };
-    getMerchant();
+    getOutlet();
+
+    // Menambahkan event listener untuk memantau posisi scroll halaman
+    window.addEventListener("scroll", handleScroll);
+
+    // Membersihkan event listener ketika komponen unmount
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+  useEffect(() => {
+    const getProduct = async () => {
+      try {
+        const API_URL = import.meta.env.VITE_API_KEY;
+        const token = localStorage.getItem("token");
+        const response = await axios.get(
+          `${API_URL}/api/v1/product/beetstore`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setProducts(response.data.data);
+        setSearchTerm(response.data.data);
+        setLoading(false);
+        // console.log(response);
+      } catch (error) {
+        if (error.response) {
+          setLoading(false);
+        }
+      }
+    };
+    getProduct();
+
+    // Menambahkan event listener untuk memantau posisi scroll halaman
+    window.addEventListener("scroll", handleScroll);
+
+    // Membersihkan event listener ketika komponen unmount
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
-  if (loading) {
-    return (
-      <div className="flex text-center justify-center items-center m-0">
-        <Loading />
-      </div>
-    );
-  }
+  // Fungsi untuk menggulir ke atas halaman
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
 
-  if (error) {
-    return <div>{error}</div>;
-  }
+  // Fungsi yang akan dipanggil saat halaman di-scroll
+  const handleScroll = debounce(() => {
+    if (window.scrollY > 700) {
+      setShowScrollButton(true);
+    } else {
+      setShowScrollButton(false);
+    }
+  }, 100); // Gunakan debounce dengan delay 100ms
 
   return (
     <>
-      <div className="">
-        {/* Swiper */}
-        <div className="h-64">
-          <Swiper
-            // centeredSlides={true}
-            slidesPerView={1}
-            spaceBetween={30}
-            loop={true}
-            pagination={{
-              clickable: true,
-            }}
-            autoplay={{
-              delay: 5000,
-              disableOnInteraction: false,
-            }}
-            // navigation={true}
-            modules={[Autoplay, Pagination, Navigation]}
-            className="mySwiper"
+      {showScrollButton && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-6 right-6 bg-[#6E205E] hover:bg-[#77376a] text-white p-2 rounded-full shadow-xl focus:outline-none"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-4 w-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
           >
-            <SwiperSlide>
-              {" "}
-              <div className="">
-                <img src={Ds} className="" />
-              </div>
-            </SwiperSlide>
-            <SwiperSlide>
-              <div className="">
-                <img src={Bs} className="" />
-              </div>
-            </SwiperSlide>
-          </Swiper>
-          {/* <Carousel
-            autoplay
-            selectedItem={activeIndex}
-            onNext={nextSlide}
-            onPrev={prevSlide}
-          >
-            {images.map((product) => (
-              <div key={product.id}>
-                <img
-                  src={product.image}
-                  alt={`Product ${product.id}`}
-                  className="h-full w-full object-cover"
-                />
-              </div>
-            ))}
-          </Carousel> */}
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M5 10l7-7m0 0l7 7m-7-7v18"
+            />
+          </svg>
+        </button>
+      )}
+      <Topbar outlet={outlet} setSearchTermOutlet={setSearchTermOutlet} products={products} loading={loading}/>
+      {loading ? (
+        <div className="pt-20 flex text-center justify-center items-center h-screen">
+          <Loading />
         </div>
-        {/* close swiper */}
-        {/* Category */}
-        <div>
-          <Category/>
-        </div>
-        {/* close Category */}
-        {/* main */}
-        <div>
-          <ProductList/>
-        </div>
-        {/* {merchant.length === 0 ? (
-          <div className="text-center text-gray-500 lg:mt-32">
-            Tidak ada data yang ditemukan.
+      ) : (
+        <>
+          <div className="pt-20 lg:h-80">
+            <Swiper
+              slidesPerView={1}
+              spaceBetween={10}
+              loop={true}
+              pagination={{
+                clickable: true,
+              }}
+              autoplay={{
+                delay: 5000,
+                disableOnInteraction: false,
+              }}
+              modules={[Autoplay, Pagination, Navigation]}
+              className="mySwiper max-w-2xl lg:mt-2 md:mt-2 md:rounded-xl lg:rounded-xl flex justify-center items-center"
+            >
+              <SwiperSlide>
+                <div className="h-full w-full ">
+                  <img src={bnr} className="object-cover" alt="Slider 1" />
+                </div>
+              </SwiperSlide>
+              <SwiperSlide>
+                <div className="h-full w-full">
+                  <img src={bnr2} className="object-cover" alt="Slider 2" />
+                </div>
+              </SwiperSlide>
+            </Swiper>
           </div>
-        ) : (
+          {/* <div>
+            <Category
+              selectedCategory={selectedCategory}
+              setSelectedCategory={setSelectedCategory}
+            />
+          </div> */}
+          {/* <div>
+            <ProductList
+              searchTerm={searchTerm}
+              selectedCategory={selectedCategory}
+            />
+          </div> */}
           <div>
-            {merchant.map((item) => (
-              <div className=" lg:pl-32 mt-10 overflow-auto" key={item.id}>
-                <Link to={`/products/${item.id}`}>
-                  <div className="bg-white hover:shadow-xl shadow-lg p-5 rounded-lg mb-10 overflow-x-auto">
-                    <div className="flex">
-                      <div className="justify-center              pt-5">
-                        {" "}
-                        <img
-                          src={item?.image}
-                          alt={item?.name}
-                          className="bg-opacity-100 "
-                          style={{
-                            width: "170px",
-                            height: "110px",
-                            top: "75px",
-                          }}
-                        />
-                      </div>
-                      <div className="pl-2">
-                        <div>
-                          <b>{item?.name}</b>
-                        </div>
-                        <div className="">
-                          <p>{item?.phone_number}</p>
-                        </div>
-                        <div>{item?.address}</div>
-                        <div className="pt-10">
-                          Total Transaction <b>8,766</b>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              </div>
-            ))}
+            <Outlet searchTermOutlet={searchTermOutlet} />
           </div>
-        )} */}
-
-        {/* close main */}
-      </div>
+        </>
+      )}
     </>
   );
 };

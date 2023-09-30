@@ -5,8 +5,8 @@ import Dashboard1 from "../../components/Dashboard/Dashboard";
 const Dashboard = () => {
   return (
     <>
-      <Topbar/>
-      <div className="pt-14">
+      {/* <Topbar/> */}
+      <div className="">
         <Dashboard1/>
       </div>
       <BottomBar/>
