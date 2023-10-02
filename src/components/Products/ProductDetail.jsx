@@ -5,6 +5,7 @@ import Topbar from "../topbar/Topbar";
 import ProductKeranjang from "./ProductKeranjang";
 import Loading from "../Loading/Loading";
 import Swal from "sweetalert2";
+import { FaMinus, FaPlus } from "react-icons/fa";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -39,6 +40,32 @@ const ProductDetail = () => {
       }
     };
     getData();
+  }, [id]);
+  useEffect(() => {
+    const getData1 = async () => {
+      try {
+        const API_URL = import.meta.env.VITE_API_KEY;
+        const token = localStorage.getItem("token");
+
+        const response = await axios.post(
+          `${API_URL}/api/v1/transaction-customer`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        console.log(response);
+      } catch (error) {
+        if (error.response) {
+          console.log(error.response.data.message);
+          setLoading(false);
+        }
+      }
+    };
+    getData1();
   }, [id]);
 
   const incrementQuantity = () => {
@@ -190,20 +217,20 @@ const ProductDetail = () => {
               <div className="lg:flex md:flex hidden  mr-5 right-0">
                 <div className="bg-[#6E205E] rounded-xl flex items-center justify-between py-2 mr-4 ">
                   <button
-                    className={`px-4 pl-5 cursor-pointer hover:opacity-70 duration-500 ${
+                    className={`px-4 pl-5 text-white cursor-pointer hover:opacity-70 duration-500 ${
                       quantity === 1 ? "opacity-50 cursor-not-allowed" : ""
                     }`}
                     onClick={decrementQuantity}
                     disabled={quantity === 1}
                   >
-                    -
+                    <FaMinus />
                   </button>
                   <p className="font-bold text-white pl-4 pr-4">{quantity}</p>
                   <button
-                    className="px-5 hover:opacity-70 cursor-pointer duration-500"
+                    className="px-5 hover:opacity-70 text-white cursor-pointer duration-500"
                     onClick={incrementQuantity}
                   >
-                    +
+                    <FaPlus />
                   </button>
                 </div>
               </div>
@@ -224,20 +251,20 @@ const ProductDetail = () => {
             <div className="lg:hidden md:hidden block ml-10">
               <div className="bg-[#6E205E] rounded-xl flex items-center justify-between py-2 mr-4 ">
                 <button
-                  className={`px-4 pl-5 cursor-pointer hover:opacity-70 duration-500 ${
+                  className={`px-4 pl-5 text-white  cursor-pointer hover:opacity-70 duration-500 ${
                     quantity === 1 ? "opacity-50 cursor-not-allowed" : ""
                   }`}
                   onClick={decrementQuantity}
                   disabled={quantity === 1}
                 >
-                  -
+                  <FaMinus />
                 </button>
                 <p className="font-bold text-white pl-4 pr-4">{quantity}</p>
                 <button
-                  className="px-5 hover:opacity-70 cursor-pointer duration-500"
+                  className="px-5 hover:opacity-70 text-white  cursor-pointer duration-500"
                   onClick={incrementQuantity}
                 >
-                  +
+                  <FaPlus />
                 </button>
               </div>
             </div>
