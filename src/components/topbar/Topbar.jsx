@@ -5,13 +5,38 @@ import { CgLogOut } from "react-icons/cg";
 import Swal from "sweetalert2";
 import axios from "axios";
 import Lg from "../../assets/lg.png";
+import Cart from "./Cart";
 
-const Topbar = ({ outlet, products, setSearchTermOutlet, loading }) => {
+const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState([]);
   const [open, setOpen] = useState(false);
+  const [cart, setCart] = useState([]);
   const [searchValue, setSearchValue] = useState(""); // State untuk nilai pencarian
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
+  useEffect(() => {
+    // Mengambil data dari localStorage
+    const cartData = JSON.parse(localStorage.getItem("cart")) || [];
+    setCart(cartData);
+  }, []);
+  const toggleCart = () => {
+    setIsCartOpen(!isCartOpen);
+  };
+
+  const closeCart = () => {
+    setIsCartOpen(false);
+  };
+
+  const handleClick = () => {
+    if (!isCartOpen) {
+      setIsCartOpen(true);
+    } else {
+      setIsCartOpen(false);
+    }
+  };
+  // Menghitung total item dalam keranjang
+  const totalItems = cart.length;
   const { id } = useParams();
   // console.log("data", products);
   useEffect(() => {
@@ -99,6 +124,12 @@ const Topbar = ({ outlet, products, setSearchTermOutlet, loading }) => {
                           <div>{products[0].Business.name}</div>
                         </div>
                       </div>
+                    ) : detail ? (
+                      <div className="w-full lg:pl-0 pl-10 text-white font-semibold pt-3 mt-3 text-center">
+                        <div key={detail?.id}>
+                          <div>{detail?.Business?.name}</div>
+                        </div>
+                      </div>
                     ) : (
                       <div className="w-full lg:pl-0 pl-10 text-white font-semibold pt-3 mt-3 text-center">
                         Profile
@@ -107,8 +138,37 @@ const Topbar = ({ outlet, products, setSearchTermOutlet, loading }) => {
                   </>
                 )}
 
-                <div className="">
-                  <div className="flex-shrink-0 lg:mt-3 mt-5 text-white">
+                <div className="flex">
+                  <div className="text-2xl  mr-4">
+                    <div className="relative inline-block text-left bottom-2">
+                      <Link
+                        to={"/products/keranjang"}
+                        className="text-white px-4 py-2  rounded-md focus:outline-none hover:text-gray-200"
+                        // onClick={handleClick}
+                        onMouseEnter={toggleCart}
+                        // onMouseLeave={closeCart}
+                      >
+                        <FaShoppingCart />
+                        {totalItems > 0 && ( // Tampilkan notifikasi angka hanya jika ada item dalam keranjang
+                          <span className="absolute top-5 right-0 bg-red-500 text-white rounded-full px-1 text-xs">
+                            {totalItems}
+                          </span>
+                        )}
+                      </Link>
+                      <div
+                        className={`${
+                          isCartOpen ? "md:block lg:block hidden" : "hidden"
+                        } cart-dropdown absolute ml-20 right-0 mt-2 w-96 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none transition-all duration-300 overflow-auto`}
+                        // onMouseEnter={toggleCart}
+                        onMouseLeave={closeCart}
+                      >
+                        <div className="cart-items p-4 ">
+                          <Cart cart={cart} />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="lg:mt-3 mt-5 text-white">
                     {" "}
                     <img src={Lg} className="bg-transparent lg:w-40 w-40" />
                   </div>
@@ -122,7 +182,12 @@ const Topbar = ({ outlet, products, setSearchTermOutlet, loading }) => {
               <div className="flex items-center">
                 <div className="flex-shrink-0 ">
                   {" "}
-                  <img src={Lg} className="bg-transparent lg:w-40 w-28 mt-2" />
+                  <Link to={"/dashboard"}>
+                    <img
+                      src={Lg}
+                      className="bg-transparent lg:w-40 w-28 mt-2"
+                    />
+                  </Link>
                 </div>
                 <div className="w-full  lg:pr-10 pr-3">
                   {" "}
@@ -180,8 +245,34 @@ const Topbar = ({ outlet, products, setSearchTermOutlet, loading }) => {
                   </form>
                 </div>
 
-                <div className="p-5 pt-8 text-2xl hidden md:block text-white">
-                  <FaShoppingCart />
+                <div className="text-2xl hidden md:block">
+                  <div className="relative inline-block text-left">
+                    <Link
+                      to={"/products/keranjang"}
+                      className="text-white px-4 py-2 rounded-md focus:outline-none hover:text-gray-200"
+                      // onClick={handleClick}
+                      onMouseEnter={toggleCart}
+                      // onMouseLeave={closeCart}
+                    >
+                      <FaShoppingCart />
+                      {totalItems > 0 && ( // Tampilkan notifikasi angka hanya jika ada item dalam keranjang
+                        <span className="absolute top-5 right-0 bg-red-500 text-white rounded-full px-1 text-xs">
+                          {totalItems}
+                        </span>
+                      )}
+                    </Link>
+                    <div
+                      className={`${
+                        isCartOpen ? "block" : "hidden"
+                      } cart-dropdown absolute right-0 mt-2 w-96 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none transition-all duration-300 overflow-auto`}
+                      // onMouseEnter={toggleCart}
+                      onMouseLeave={closeCart}
+                    >
+                      <div className="cart-items p-4 ">
+                        <Cart cart={cart} />
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div className="p-5 pt-6 text-gray-400 text-2xl hidden md:block md:mr-3">
                   |
@@ -200,7 +291,7 @@ const Topbar = ({ outlet, products, setSearchTermOutlet, loading }) => {
                 ) : (
                   <>
                     {user.length ? (
-                      <div className="md:block hidden p-5 mb-3">
+                      <div className="md:block hidden p-5 mb-6">
                         {" "}
                         <ul className="flex fixed mr-5 right-0">
                           <li className="">
@@ -313,7 +404,10 @@ const Topbar = ({ outlet, products, setSearchTermOutlet, loading }) => {
             {isOpen && (
               <div className="md:hidden">
                 <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                  <Link className="text-white  hover:bg-[#853074] hover:text-white flex px-3 py-2 rounded-md text-base font-medium">
+                  <Link
+                    to={"/products/keranjang"}
+                    className="text-white  hover:bg-[#853074] hover:text-white flex px-3 py-2 rounded-md text-base font-medium"
+                  >
                     <div className="mt-1">
                       <FaShoppingCart />
                     </div>{" "}

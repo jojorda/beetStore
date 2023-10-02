@@ -5,8 +5,7 @@ const ProductKeranjang = () => {
   return (
     <>
       {" "}
-      <Topbar2 />
-      <div className="pt-3">
+      <div className="">
         <ProductKeranjang2 />
       </div>
     </>
