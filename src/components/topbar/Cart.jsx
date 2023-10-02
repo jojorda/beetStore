@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { FaMinus, FaPlus, FaTrashAlt } from "react-icons/fa";
 import Topbar from "../topbar/Topbar";
+import Swal from "sweetalert2";
 const Cart = () => {
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -56,11 +57,37 @@ const Cart = () => {
     }
   };
   const handleRemoveFromCart = (itemId) => {
-    const updatedCart = cart.filter((item) => item.id !== itemId);
-    setCart(updatedCart);
+    // Tampilkan SweetAlert untuk konfirmasi penghapusan item
+    Swal.fire({
+      title: "Konfirmasi",
+      text: "Apakah Anda yakin ingin menghapus item ini dari keranjang?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Ya, Hapus!",
+      cancelButtonText: "Batal",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Jika pengguna mengonfirmasi penghapusan
+        const updatedCart = cart.filter((item) => item.id !== itemId);
+        setCart(updatedCart);
 
-    // Simpan keranjang belanja di localStorage
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
+        // Simpan keranjang belanja di localStorage
+        localStorage.setItem("cart", JSON.stringify(updatedCart));
+
+        // Tampilkan SweetAlert bahwa item telah dihapus
+        Swal.fire({
+          icon: "success",
+          title: "Item Telah Dihapus",
+          showConfirmButton: false,
+          timer: 1500, // Menampilkan alert selama 1,5 detik
+          customClass: {
+            title: "text-sm", // Mengatur ukuran teks judul menjadi lebih kecil
+          },
+        });
+      }
+    });
   };
 
   const handleCheckout = () => {
