@@ -1,5 +1,10 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { FaArrowLeft, FaShoppingCart, FaUserAlt } from "react-icons/fa";
+import {
+  FaArrowLeft,
+  FaShoppingCart,
+  FaThLarge,
+  FaUserAlt,
+} from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { CgLogOut } from "react-icons/cg";
 import Swal from "sweetalert2";
@@ -139,19 +144,19 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
                 ) : (
                   <>
                     {products && products.length > 0 ? (
-                      <div className="w-full lg:pl-0 pl-10 text-white font-semibold pt-3 mt-3 text-center">
+                      <div className="w-full lg:pl-0 pl-10  text-white font-semibold pt-3 mt-2  md:mt-3 lg:mt-3 text-center">
                         <div key={products[0].id}>
                           <div>{products[0].Business.name}</div>
                         </div>
                       </div>
                     ) : detail ? (
-                      <div className="w-full lg:pl-0 pl-10 text-white font-semibold pt-3 mt-3 text-center">
+                      <div className="w-full lg:pl-0 pl-10 text-white font-semibold pt-3 mt-2 md:mt-3 lg:mt-3 text-center">
                         <div key={detail?.id}>
                           <div>{detail?.Business?.name}</div>
                         </div>
                       </div>
                     ) : (
-                      <div className="w-full lg:pl-0 pl-10 text-white font-semibold pt-3 mt-3 text-center">
+                      <div className="w-full lg:pl-0 pl-10 text-white font-semibold pt-3 mt-2.5 md:mt-3 lg:mt-3 text-center">
                         Profile
                       </div>
                     )}
@@ -428,6 +433,15 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
             {isOpen && (
               <div className="md:hidden">
                 <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                  <Link
+                    to={"/dashboard"}
+                    className="text-white  hover:bg-[#853074] hover:text-white flex px-3 py-2 rounded-md text-base font-medium"
+                  >
+                    <div className="mt-1">
+                      <FaThLarge />
+                    </div>{" "}
+                    <div className="pl-2">Beranda</div>
+                  </Link>
                   <Link
                     to={"/products/keranjang"}
                     className="text-white  hover:bg-[#853074] hover:text-white flex px-3 py-2 rounded-md text-base font-medium"
