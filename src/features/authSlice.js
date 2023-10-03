@@ -69,14 +69,17 @@ export const RegisterUser = createAsyncThunk("user/RegisterUser", async (userReg
         popup: "colored-toast",
       },
       showConfirmButton: false,
-      timer: 3000,
+      timer: 2000,
       timerProgressBar: true,
     });
     Toast.fire({
       icon: "success",
       text: "Register Success",
+    }).then(() => {
+      // Setelah SweetAlert ditutup, muat ulang halaman
+      window.location.reload();
     });
-    console.log(response);
+    // console.log(response);
     
     // return response.data;
   } catch (error) {

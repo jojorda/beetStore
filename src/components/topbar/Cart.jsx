@@ -94,6 +94,17 @@ const Cart = () => {
   };
 
   const handleCheckout = () => {
+    Swal.fire({
+      icon: "info",
+      title: "Untuk Fitur Ini Belum Aktif :(",
+      showConfirmButton: false,
+      timer: 1500, // Menampilkan alert selama 1,5 detik
+      customClass: {
+        title: "text-sm", // Mengatur ukuran teks judul menjadi lebih kecil
+      },
+    });
+  };
+  const handleCheckout1 = () => {
     // Kirim pesanan ke database (gunakan Axios atau metode lainnya)
     const API_URL = import.meta.env.VITE_API_KEY;
     const token = localStorage.getItem("token");

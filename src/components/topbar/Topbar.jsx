@@ -93,13 +93,17 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
     setIsOpen(!isOpen);
   };
   const navigate = useNavigate();
+  
   const logout = () => {
     localStorage.clear();
     Swal.fire({
       icon: "success",
       text: "Anda Berhasil Logout.",
-      confirmButtonColor: "#6E205E",
-      confirmButtonText: "Yes!",
+      showConfirmButton: false,
+      timer: 1500, // Menampilkan alert selama 1,5 detik
+      customClass: {
+        title: "text-sm", // Mengatur ukuran teks judul menjadi lebih kecil
+      },
     });
     navigate("/");
   };
