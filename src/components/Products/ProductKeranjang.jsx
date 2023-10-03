@@ -86,6 +86,9 @@ const ProductKeranjang = () => {
           customClass: {
             title: "text-sm", // Mengatur ukuran teks judul menjadi lebih kecil
           },
+        }).then(() => {
+          // Setelah SweetAlert ditutup, muat ulang halaman
+          window.location.reload();
         });
       }
     });

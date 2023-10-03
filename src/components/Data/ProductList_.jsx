@@ -8,6 +8,7 @@ const ProductList_ = ({ searchTerm, selectedCategory }) => {
   const itemsToShow = showMore ? searchTerm.length : 10;
   const [visibleData, setVisibleData] = useState([]);
   const [showNotFound, setShowNotFound] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false); // State baru untuk loading tombol "Muat Lebih Banyak"
 
   useEffect(() => {
     const filterProductsByCategory = () => {
@@ -39,15 +40,20 @@ const ProductList_ = ({ searchTerm, selectedCategory }) => {
   }, [searchTerm, itemsToShow, selectedCategory]);
 
   const toggleShowMore = () => {
+    setLoadingMore(true); // Set loadingMore ke true saat tombol "Muat Lebih Banyak" diklik
     setShowMore(!showMore);
     setVisibleData(!showMore ? searchTerm : searchTerm.slice(0, itemsToShow));
+    setTimeout(() => {
+      setLoadingMore(false);
+    }, 1500); // Sesuaikan dengan waktu simulasi loading yang sesuai
   };
 
   return (
-    <div className="px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 mt-8">
+    <div className="px-3 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 mt-8">
       <div className="font-bold text-gray-900 mb-4 text-xl">Daftar Produk</div>
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
+          <LoadingProduct />
           <LoadingProduct />
           <LoadingProduct />
           <LoadingProduct />
@@ -67,7 +73,7 @@ const ProductList_ = ({ searchTerm, selectedCategory }) => {
                   Tidak ada produk yang tersedia.
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
+                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
                   {visibleData.map((item) => (
                     <Link
                       to={`/products/detail/${item.id}`}
@@ -124,12 +130,27 @@ const ProductList_ = ({ searchTerm, selectedCategory }) => {
                 ) : (
                   <div className="flex justify-center mt-6">
                     {visibleData.length > 3 && (
-                      <button
-                        onClick={toggleShowMore}
-                        className="px-4 py-2 rounded-lg font-bold text-[#6E205E] focus:outline-none bg-white border border-[#6E205E] hover:bg-gray-100 hover:text-[#6E205E] focus:z-10 focus:ring-4 focus:ring-gray-200"
-                      >
-                        {showMore ? "Tampilkan Kurang" : "Muat Lebih Banyak"}
-                      </button>
+                      <div>
+                        <button
+                          onClick={toggleShowMore}
+                          className="px-4 py-2 rounded-lg font-bold text-[#6E205E] focus:outline-none bg-white border border-[#6E205E] hover:bg-gray-100 hover:text-[#6E205E] focus:z-10 focus:ring-4 focus:ring-gray-200"
+                        >
+                          {loadingMore ? (
+                            <div className="flex justify-center">
+                              <div className="h-4 w-4 mt-1 mr-2 animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em] text-primary motion-reduce:animate-[spin_1.5s_linear_infinite]">
+                                {/* <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+                              Loading...
+                            </span> */}
+                              </div>
+                              <div>Loading...</div>
+                            </div>
+                          ) : showMore ? (
+                            "Tampilkan Kurang"
+                          ) : (
+                            "Muat Lebih Banyak"
+                          )}
+                        </button>
+                      </div>
                     )}
                   </div>
                 )}

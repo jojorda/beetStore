@@ -85,6 +85,9 @@ const Cart = () => {
           customClass: {
             title: "text-sm", // Mengatur ukuran teks judul menjadi lebih kecil
           },
+        }).then(() => {
+          // Setelah SweetAlert ditutup, muat ulang halaman
+          window.location.reload();
         });
       }
     });
@@ -181,7 +184,7 @@ const Cart = () => {
         </div>
         {/* Total Harga */}
         <div className="text-sm">
-          <div className=" w-full">
+          <div className=" w-full ">
             <div className="border border-[#6E205E] mt-8 p-3 rounded-xl">
               <div className="flex">
                 <div className=" text-gray-500  w-3/5">

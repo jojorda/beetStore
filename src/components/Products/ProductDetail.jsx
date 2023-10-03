@@ -113,6 +113,9 @@ const ProductDetail = () => {
           customClass: {
             title: "text-sm", // Mengatur ukuran teks judul menjadi lebih kecil
           },
+        }).then(() => {
+          // Setelah SweetAlert ditutup, muat ulang halaman
+          window.location.reload();
         });
       } else {
         // Jika item belum ada dalam keranjang, kita akan menambahkannya.
@@ -134,6 +137,9 @@ const ProductDetail = () => {
           customClass: {
             title: "text-lg", // Mengatur ukuran teks judul menjadi lebih kecil
           },
+        }).then(() => {
+          // Setelah SweetAlert ditutup, muat ulang halaman
+          window.location.reload();
         });
       }
     }
@@ -247,7 +253,7 @@ const ProductDetail = () => {
             </div>
           </div>
 
-          <div className="lg:block flex mt-3">
+          <div className="lg:block flex">
             <div className="lg:hidden md:hidden block ml-10">
               <div className="bg-[#6E205E] rounded-xl flex items-center justify-between py-2 mr-4 ">
                 <button
@@ -269,12 +275,12 @@ const ProductDetail = () => {
               </div>
             </div>
 
-            <div className="flex">
+            <div className="flex ">
               <div className="lg:w-4/5"></div>
-              <div>
+              <div className="mb-5">
                 {" "}
                 <button
-                  className="text-white bg-[#6E205E] rounded-xl font-semibold lg:pl-20 lg:pr-20 md:pl-20 md:pr-20 pl-10 pr-10 py-2"
+                  className="text-white bg-[#6E205E] rounded-xl  font-semibold lg:pl-20 lg:pr-20 md:pl-20 md:pr-20 pl-10 pr-10 py-2"
                   onClick={handleAddToCart}
                 >
                   Add To Cart

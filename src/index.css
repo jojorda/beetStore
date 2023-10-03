@@ -64,4 +64,50 @@
 .swiper-button-next::after {
   font-size: 15px;
 }
-  
+.cart-dropdown {
+  max-height: 370px !important;
+  overflow-y: auto !important;
+  margin-left: 100px;
+}
+.cart-dropdown-show {
+  opacity: 1;
+  transform: scaleY(1);
+  transform-origin: top;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.cart-dropdown-animation {
+  animation: scale-up-ver-top 0.2s ease-in-out; /* Sesuaikan durasi dan easing sesuai kebutuhan Anda */
+  transform-origin: 100% 0;
+  transform-origin: 100% 0;
+}
+
+@-webkit-keyframes scale-up-ver-top {
+  0% {
+    -webkit-transform: scaleY(0.4);
+    transform: scaleY(0.4);
+    -webkit-transform-origin: 100% 0;
+    transform-origin: 100% 0;
+  }
+  100% {
+    -webkit-transform: scaleY(1);
+    transform: scaleY(1);
+    -webkit-transform-origin: 100% 0;
+    transform-origin: 100% 0;
+  }
+}
+
+@keyframes scale-up-ver-top {
+  0% {
+    -webkit-transform: scaleY(0.4);
+    transform: scaleY(0.4);
+    -webkit-transform-origin: 100% 0;
+    transform-origin: 100% 0;
+  }
+  100% {
+    -webkit-transform: scaleY(1);
+    transform: scaleY(1);
+    -webkit-transform-origin: 100% 0;
+    transform-origin: 100% 0;
+  }
+}

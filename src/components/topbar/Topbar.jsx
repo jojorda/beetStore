@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import Lg from "../../assets/lg.png";
 import Cart from "./Cart";
+import "animate.css/animate.min.css"; // Impor animate.css
 
 const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,12 +15,28 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
   const [cart, setCart] = useState([]);
   const [searchValue, setSearchValue] = useState(""); // State untuk nilai pencarian
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isOpenUser, setIsOpenUser] = useState(false);
 
   useEffect(() => {
     // Mengambil data dari localStorage
     const cartData = JSON.parse(localStorage.getItem("cart")) || [];
     setCart(cartData);
   }, []);
+  const toggleOpen = () => {
+    setIsOpenUser(!isOpenUser);
+  };
+
+  const closeOpen = () => {
+    setIsOpenUser(false);
+  };
+
+  const handleClick = () => {
+    if (!isOpenUser) {
+      setIsOpenUser(true);
+    } else {
+      setIsOpenUser(false);
+    }
+  };
   const toggleCart = () => {
     setIsCartOpen(!isCartOpen);
   };
@@ -28,13 +45,13 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
     setIsCartOpen(false);
   };
 
-  const handleClick = () => {
-    if (!isCartOpen) {
-      setIsCartOpen(true);
-    } else {
-      setIsCartOpen(false);
-    }
-  };
+  // const handleClick1 = () => {
+  //   if (!isCartOpen) {
+  //     setIsCartOpen(true);
+  //   } else {
+  //     setIsCartOpen(false);
+  //   }
+  // };
   // Menghitung total item dalam keranjang
   const totalItems = cart.length;
   const { id } = useParams();
@@ -110,9 +127,12 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
             <div className="h-16">
               <div className="flex">
                 <div className="mt-6">
-                  <Link to={"/dashboard"} className="text-xl text-white">
+                  <button
+                    onClick={() => window.history.back()}
+                    className="text-xl text-white"
+                  >
                     <FaArrowLeft />
-                  </Link>
+                  </button>
                 </div>
                 {loading ? (
                   <div className="w-full lg:pl-0 pl-10 text-white font-semibold pt-3 mt-3 text-center"></div>
@@ -139,17 +159,15 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
                 )}
 
                 <div className="flex">
-                  <div className="text-2xl  mr-4">
-                    <div className="relative inline-block text-left bottom-2">
+                  <div className="lg:text-xl text-xl mr-4 mt-1.5">
+                    <div className="relative text-left bottom-3">
                       <Link
                         to={"/products/keranjang"}
-                        className="text-white px-4 py-2  rounded-md focus:outline-none hover:text-gray-200"
-                        // onClick={handleClick}
+                        className="text-white px-4 py-2 rounded-md focus:outline-none hover:text-gray-200"
                         onMouseEnter={toggleCart}
-                        // onMouseLeave={closeCart}
                       >
                         <FaShoppingCart />
-                        {totalItems > 0 && ( // Tampilkan notifikasi angka hanya jika ada item dalam keranjang
+                        {totalItems > 0 && (
                           <span className="absolute top-5 right-0 bg-red-500 text-white rounded-full px-1 text-xs">
                             {totalItems}
                           </span>
@@ -157,17 +175,19 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
                       </Link>
                       <div
                         className={`${
-                          isCartOpen ? "md:block lg:block hidden" : "hidden"
-                        } cart-dropdown absolute ml-20 right-0 mt-2 w-96 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none transition-all duration-300 overflow-auto`}
-                        // onMouseEnter={toggleCart}
+                          isCartOpen
+                            ? "cart-dropdown absolute lg:block md:block hidden right-0 w-96 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none overflow-y-auto cart-dropdown-animation"
+                            : "hidden"
+                        }`}
                         onMouseLeave={closeCart}
                       >
-                        <div className="cart-items p-4 ">
+                        <div className="cart-items p-4">
                           <Cart cart={cart} />
                         </div>
                       </div>
                     </div>
                   </div>
+
                   <div className="lg:mt-3 mt-5 text-white">
                     {" "}
                     <img src={Lg} className="bg-transparent lg:w-40 w-40" />
@@ -185,14 +205,14 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
                   <Link to={"/dashboard"}>
                     <img
                       src={Lg}
-                      className="bg-transparent lg:w-40 w-28 mt-2"
+                      className="bg-transparent lg:w-40 w-28 mt-2 lg:mt-0"
                     />
                   </Link>
                 </div>
                 <div className="w-full  lg:pr-10 pr-3">
                   {" "}
                   <form
-                    className="lg:pt-3 pt-2 pl-2 lg:pl-10"
+                    className="lg:pt-0 pt-2 pl-2 lg:pl-10"
                     onSubmit={handleSubmit}
                   >
                     <div className="relative">
@@ -249,7 +269,7 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
                   <div className="relative inline-block text-left">
                     <Link
                       to={"/products/keranjang"}
-                      className="text-white px-4 py-2 rounded-md focus:outline-none hover:text-gray-200"
+                      className="text-white px-4 py-2 rounded-md  focus:outline-none hover:text-gray-200"
                       // onClick={handleClick}
                       onMouseEnter={toggleCart}
                       // onMouseLeave={closeCart}
@@ -263,9 +283,10 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
                     </Link>
                     <div
                       className={`${
-                        isCartOpen ? "block" : "hidden"
-                      } cart-dropdown absolute right-0 mt-2 w-96 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none transition-all duration-300 overflow-auto`}
-                      // onMouseEnter={toggleCart}
+                        isCartOpen
+                          ? "cart-dropdown absolute ml-20  right-0 w-96 rounded-md shadow-lg mt-3 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none overflow-y-auto cart-dropdown-animation"
+                          : "hidden"
+                      }`}
                       onMouseLeave={closeCart}
                     >
                       <div className="cart-items p-4 ">
@@ -274,7 +295,7 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
                     </div>
                   </div>
                 </div>
-                <div className="p-5 pt-6 text-gray-400 text-2xl hidden md:block md:mr-3">
+                <div className="p-5 pt-4 text-gray-400 text-2xl hidden md:block md:mr-3">
                   |
                 </div>
                 {loading ? (
@@ -291,14 +312,15 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
                 ) : (
                   <>
                     {user.length ? (
-                      <div className="md:block hidden p-5 mb-6">
+                      <div className="md:block hidden mb-8 p-1">
                         {" "}
                         <ul className="flex fixed mr-5 right-0">
                           <li className="">
                             <a
                               className="px-3 flex text-sm rounded-full focus:outline-none"
                               id="user-menu-button"
-                              onClick={() => setOpen(!open)}
+                              onClick={handleClick}
+                              onMouseEnter={toggleOpen}
                             >
                               <div className="relative cursor-pointer text-white">
                                 <div>
@@ -321,35 +343,37 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
                             </span>
                           ))} */}
                             </a>
-                            {open ? (
-                              <div className="absolute right-0 z-10 w-56 mt-4 origin-top-right bg-white border border-gray-100 rounded-md shadow-lg">
-                                <div className="p-2 items-center">
-                                  {user.map((item) => (
-                                    <Link
-                                      to={`/profile/${item.id}`}
-                                      className="flex w-full  px-4 py-2 text-gray-500 rounded-lg hover:bg-[#6E205E] hover:text-gray-50"
-                                      key={item.id}
-                                    >
-                                      <FaUserAlt className="text-lg m-2" />
-                                      <span className="pt-2 pl-1">
-                                        {" "}
-                                        Profile
-                                      </span>
-                                    </Link>
-                                  ))}
-                                  <button
-                                    type="button"
-                                    onClick={logout}
+
+                            <div
+                              className={`${
+                                isOpenUser
+                                  ? "cart-dropdown absolute ml-20  right-0 w-40 rounded-md shadow-lg mt-3 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none overflow-y-auto cart-dropdown-animation"
+                                  : "hidden"
+                              }`}
+                              onMouseLeave={closeOpen}
+                              onClick={handleClick}
+                            >
+                              <div className="p-2 items-center">
+                                {user.map((item) => (
+                                  <Link
+                                    to={`/profile/${item.id}`}
                                     className="flex w-full  px-4 py-2 text-gray-500 rounded-lg hover:bg-[#6E205E] hover:text-gray-50"
+                                    key={item.id}
                                   >
-                                    <CgLogOut className="text-xl m-2 mt-0" />
-                                    Logout
-                                  </button>
-                                </div>
+                                    <FaUserAlt className="text-lg m-2" />
+                                    <span className="pt-2 pl-1"> Profile</span>
+                                  </Link>
+                                ))}
+                                <button
+                                  type="button"
+                                  onClick={logout}
+                                  className="flex w-full  px-4 py-2 text-gray-500 rounded-lg hover:bg-[#6E205E] hover:text-gray-50"
+                                >
+                                  <CgLogOut className="text-xl m-2 mt-0" />
+                                  Logout
+                                </button>
                               </div>
-                            ) : (
-                              ""
-                            )}
+                            </div>
                           </li>
                         </ul>
                       </div>
