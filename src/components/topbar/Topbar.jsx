@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   FaArrowLeft,
   FaShoppingCart,
@@ -21,7 +21,7 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
   const [searchValue, setSearchValue] = useState(""); // State untuk nilai pencarian
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isOpenUser, setIsOpenUser] = useState(false);
-
+  const location = useLocation();
   useEffect(() => {
     // Mengambil data dari localStorage
     const cartData = JSON.parse(localStorage.getItem("cart")) || [];
@@ -195,7 +195,9 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
 
                   <div className="lg:mt-3 mt-5 text-white">
                     {" "}
-                    <img src={Lg} className="bg-transparent lg:w-40 w-40" />
+                    <Link to={"/dashboard"}>
+                      <img src={Lg} className="bg-transparent lg:w-40 w-40" />
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -435,7 +437,9 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
                 <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                   <Link
                     to={"/dashboard"}
-                    className="text-white  hover:bg-[#853074] hover:text-white flex px-3 py-2 rounded-md text-base font-medium"
+                    className={`text-white hover:bg-[#853074] hover:text-white flex px-3 py-2 rounded-md text-base font-medium ${
+                      location.pathname === "/dashboard" ? "bg-[#853074]" : ""
+                    }`}
                   >
                     <div className="mt-1">
                       <FaThLarge />
@@ -444,7 +448,11 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
                   </Link>
                   <Link
                     to={"/products/keranjang"}
-                    className="text-white  hover:bg-[#853074] hover:text-white flex px-3 py-2 rounded-md text-base font-medium"
+                    className={`text-white hover:bg-[#853074] hover:text-white flex px-3 py-2 rounded-md text-base font-medium ${
+                      location.pathname === "/products/keranjang"
+                        ? "bg-[#853074]"
+                        : ""
+                    }`}
                   >
                     <div className="mt-1">
                       <FaShoppingCart />
@@ -460,7 +468,11 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
                           {user.map((item) => (
                             <Link
                               to={`/profile/${item.id}`}
-                              className="text-white  hover:bg-[#853074] hover:text-white flex px-3 py-2 rounded-md text-base font-medium"
+                              className={`text-white hover:bg-[#853074] hover:text-white flex px-3 py-2 rounded-md text-base font-medium ${
+                                location.pathname === `/profile/${item.id}`
+                                  ? "bg-[#853074]"
+                                  : ""
+                              }`}
                               key={item.id}
                             >
                               <FaUserAlt className="text-lg mt-1" />
@@ -492,11 +504,11 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
 
                       <div>
                         {/* <Link
-                to={"/"}
-                className="mt-5 py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-white bg-[#6E205E] rounded-xl hover:bg-[#77376a] hover:text-gray-50"
-              >
-                SignIn 
-              </Link> */}
+                          to={"/"}
+                          className="mt-5 py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-white bg-[#6E205E] rounded-xl hover:bg-[#77376a] hover:text-gray-50"
+                        >
+                          SignIn 
+                        </Link> */}
                       </div>
                     </div>
                   )}
