@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import { FaMinus, FaPlus, FaTrashAlt } from "react-icons/fa";
 import Topbar from "../topbar/Topbar";
 import Swal from "sweetalert2";
+import Mt from "../../assets/mt.jpg";
+import Cr from "../../assets/cart.jpg";
 
 const ProductKeranjang = () => {
   const [cart, setCart] = useState([]);
@@ -95,13 +97,12 @@ const ProductKeranjang = () => {
   };
   const handleCheckout = () => {
     Swal.fire({
-      icon: "info",
-      title: "Untuk Fitur Ini Belum Aktif :(",
+      imageUrl: Mt,
+      imageWidth: 300,
+      imageHeight: 200,
+      html: '<p class="text-sm text-gray-400 font-semibold">Belum Tersedia Saat Ini :(</p>', 
       showConfirmButton: false,
-      timer: 1500, // Menampilkan alert selama 1,5 detik
-      customClass: {
-        title: "text-sm", // Mengatur ukuran teks judul menjadi lebih kecil
-      },
+      timer: 2000, // Menampilkan alert selama 1,5 detik
     });
   };
   const handleCheckout1 = () => {
@@ -134,12 +135,39 @@ const ProductKeranjang = () => {
     <>
       <Topbar products={cart} loading={loading} />
       <div className="pt-20">
-        <div className="lg:p-12 p-5 lg:flex-1 md:flex block">
+        <div className="lg:pl-12 p-5 lg:flex-1 md:flex block">
           <div className="lg:w-2/3">
             <h2 className="text-2xl font-bold mb-4">Keranjang Belanja</h2>
 
             {cart && cart.length === 0 ? (
-              <p>Keranjang belanja Anda masih kosong.</p>
+              <div className="block text-center m-0">
+                {" "}
+                {/* Menambahkan class "text-center" untuk pusatkan teks */}
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <img
+                    src={Cr}
+                    alt="Keranjang kosong"
+                    style={{
+                      maxWidth: "70%", // Maksimum lebar gambar adalah lebar container
+                      height: "auto", // Tinggi gambar akan menyesuaikan
+                      display: "block", // Agar gambar tidak memiliki margin bawah tambahan
+                      margin: "0 auto", // Pusatkan gambar horizontal
+                    }}
+                  />
+                  <div className="font-semibold text-gray-500">
+                    {" "}
+                    {/* Menambahkan "mt-4" untuk jarak atas */}
+                    Keranjang belanja Anda masih kosong.
+                  </div>
+                </div>
+              </div>
             ) : (
               <div>
                 {cart.map((item) => (

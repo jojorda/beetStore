@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import LoadingProduct from "../Loading/LoadingProduct";
 import { Link } from "react-router-dom";
+import Pro from "../../assets/pro.jpg";
 
 const ProductList_ = ({ searchTerm, selectedCategory }) => {
   const [loading, setLoading] = useState(true);
@@ -50,7 +51,7 @@ const ProductList_ = ({ searchTerm, selectedCategory }) => {
 
   return (
     <div className="px-3 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 mt-8">
-      <div className="font-bold text-gray-900 mb-4 text-xl">Daftar Produk</div>
+      <div className="font-bold text-gray-900 mb-3 text-xl">Daftar Produk</div>
       {loading ? (
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
           <LoadingProduct />
@@ -63,14 +64,24 @@ const ProductList_ = ({ searchTerm, selectedCategory }) => {
       ) : (
         <div>
           {showNotFound ? (
-            <div className="text-center pt-10 text-gray-500">
-              Tidak ada produk yang tersedia.
+            <div className="text-center font-semibold text-gray-500">
+              <img
+                src={Pro} // Gantilah dengan path gambar Anda
+                alt="Tidak ada Outlet"
+                className="responsive-image" // Tambahkan class untuk styling gambar
+              />
+              <p> Tidak ada produk yang tersedia.</p>
             </div>
           ) : (
             <>
               {visibleData.length === 0 ? (
-                <div className="text-center pt-10 text-gray-500">
-                  Tidak ada produk yang tersedia.
+                <div className="text-center font-semibold text-gray-500">
+                  <img
+                    src={Pro} // Gantilah dengan path gambar Anda
+                    alt="Tidak ada Outlet"
+                    className="responsive-image" // Tambahkan class untuk styling gambar
+                  />
+                  <p> Tidak ada produk yang tersedia.</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">

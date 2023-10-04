@@ -124,7 +124,12 @@ const Dashboard = () => {
           </svg>
         </button>
       )}
-      <Topbar outlet={outlet} setSearchTermOutlet={setSearchTermOutlet} products={products} loading={loading}/>
+      <Topbar
+        outlet={outlet}
+        setSearchTermOutlet={setSearchTermOutlet}
+        products={products}
+        loading={loading}
+      />
       {loading ? (
         <div className="pt-20 flex text-center justify-center items-center h-screen">
           <Loading />

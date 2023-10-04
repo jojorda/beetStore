@@ -111,3 +111,30 @@
     transform-origin: 100% 0;
   }
 }
+.responsive-image {
+  max-width: 100%; 
+  height: auto; 
+  display: block; 
+  margin: 0 auto; 
+}
+
+/* Gaya gambar untuk layar kecil (misalnya, < 768px) */
+@media (max-width: 767px) {
+  .responsive-image {
+    max-width: 80%; 
+  }
+}
+
+/* Gaya gambar untuk layar sedang (misalnya, 768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .responsive-image {
+    max-width: 60%; 
+  }
+}
+
+/* Gaya gambar untuk layar besar (misalnya, > 1023px) */
+@media (min-width: 1024px) {
+  .responsive-image {
+    max-width: 50%; 
+  }
+}
