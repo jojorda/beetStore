@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import "swiper/css/pagination";
-import "./style.css";
+import "swiper/css/navigation";
+import "./style.css"; // Pastikan file style.css sudah terhubung dengan benar
 import { Navigation } from "swiper/modules";
 import axios from "axios";
 
@@ -22,7 +22,6 @@ const Category = ({ selectedCategory, setSelectedCategory }) => {
             Authorization: `Bearer ${token}`,
           },
         });
-        // console.log(response);
         setCategoryData(response.data.data);
       } catch (error) {
         if (error.response) {
@@ -34,73 +33,73 @@ const Category = ({ selectedCategory, setSelectedCategory }) => {
   }, [id]);
 
   return (
-    <div className="lg:p-10 p-5 shadow mb-5">
-      <div className="text-gray-800 font-semibold pb-2">Pilihan Category</div>
-      <div className="lg:pl-4">
-        <div className="group flex whitespace-nowrap py-3">
-          <Swiper
-            spaceBetween={13}
-            slidesPerView={3}
-            navigation={{
-              nextEl: ".swiper-button-next",
-              prevEl: ".swiper-button-prev",
-            }}
-            breakpoints={{
-              640: {
-                slidesPerView: 3,
-              },
-              768: {
-                slidesPerView: 6,
-              },
-              1024: {
-                slidesPerView: 9,
-              },
-            }}
-            modules={[Navigation]}
-            className="mySwiper pl-8"
-          >
-            <SwiperSlide>
-              {" "}
-              <div className="mr-10">
-                <Link>
-                  <div
-                    className={`bg-gray-100 text-sm hover:bg-gray-300 rounded-2xl p-2 pl-3 pr-3 text-center ${
-                      selectedCategory === "all" ? "text-[#6E205E]" : ""
-                    }`}
-                    onClick={() => setSelectedCategory("all")}
-                  >
-                    all
-                  </div>
-                </Link>
-              </div>
-            </SwiperSlide>
-            {categoryData.map((category) => (
-              <SwiperSlide key={category.id}>
+    <>
+      <div className="lg:p-10 p-5 shadow mb-5">
+        <div className="text-gray-800 font-semibold pb-2">Pilihan Category</div>
+        <div className="lg:pl-4">
+          <div className="flex whitespace-nowrap py-3">
+            <Swiper
+              navigation={{
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+              }}
+              modules={[Navigation]}
+              spaceBetween={13}
+              slidesPerView={3}
+              breakpoints={{
+                640: {
+                  slidesPerView: 3,
+                },
+                768: {
+                  slidesPerView: 6,
+                },
+                1024: {
+                  slidesPerView: 9,
+                },
+              }}
+              className="mySwiper pl-8 custom-swiper-navigation relative  group"
+            >
+              {/* Konten Swiper di sini */}
+              <SwiperSlide>
                 <div className="mr-10">
-                  <div
-                    className={`bg-gray-100 text-sm lowercase cursor-pointer hover:bg-gray-300 rounded-2xl p-2 pl-3 pr-3 text-center ${
-                      selectedCategory === category.name.toLowerCase()
-                        ? "text-[#6E205E]"
-                        : ""
-                    }`}
-                    onClick={() =>
-                      setSelectedCategory(category.name.toLowerCase())
-                    }
-                  >
-                    {category.name}
-                  </div>
+                  <Link>
+                    <div
+                      className={`bg-gray-100 text-sm hover:bg-gray-300 rounded-2xl p-2 pl-3 pr-3 text-center ${
+                        selectedCategory === "all" ? "text-[#6E205E]" : ""
+                      }`}
+                      onClick={() => setSelectedCategory("all")}
+                    >
+                      all
+                    </div>
+                  </Link>
                 </div>
               </SwiperSlide>
-            ))}
-          </Swiper>
-
-          <div className="lg:flex lg:absolute md:absolute hidden left-0 inset-0  lg:mt-56 md:hidden opacity-0 group-hover:opacity-100 ">
-            <div className="swiper-button-prev  p-3.5  text-gray-500 bg-white shadow-xl rounded-full"></div>
-            <div className="swiper-button-next  p-3.5   text-gray-500 bg-white shadow-xl rounded-full"></div>
+              {categoryData.map((category) => (
+                <SwiperSlide key={category.id}>
+                  <div className="mr-10">
+                    <div
+                      className={`bg-gray-100 text-sm lowercase cursor-pointer hover:bg-gray-300 rounded-2xl p-2 pl-3 pr-3 text-center ${
+                        selectedCategory === category.name.toLowerCase()
+                          ? "text-[#6E205E]"
+                          : ""
+                      }`}
+                      onClick={() =>
+                        setSelectedCategory(category.name.toLowerCase())
+                      }
+                    >
+                      {category.name}
+                    </div>
+                  </div>
+                </SwiperSlide>
+              ))}
+              {/* Konten Swiper di sini */}
+              <div className="swiper-button-prev absolute left-0 top-3 transform translate-y-1/2 w-7 h-7 bg-white rounded-full flex items-center justify-center cursor-pointer text-white opacity-0 group-hover:bg-gray-400 group-hover:text-[#6E205E] group-hover:shadow group-hover:opacity-100 transition duration-300"></div>
+              <div className="swiper-button-next absolute right-0 top-3 transform translate-y-1/2 w-7 h-7 bg-white rounded-full flex items-center justify-center cursor-pointer text-white opacity-0 group-hover:bg-gray-400 group-hover:text-[#6E205E] group-hover:shadow  group-hover:opacity-100 transition duration-300"></div>
+            </Swiper>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

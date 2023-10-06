@@ -194,8 +194,8 @@ const ProductDetail = () => {
           <Loading />
         </div>
       ) : (
-        <div className="bg-gray-100 h-screen" key={detail.id}>
-          <div className="p-12 pt-24 flex flex-wrap lg:flex-nowrap bg-white">
+        <div className="bg-gray-100  pt-14" key={detail.id}>
+          <div className="lg:p-12 p-5 sm:p-7 flex flex-wrap md:justify-center lg:flex-nowrap bg-white">
             <div className="flex-wrap shadow-lg rounded-xl">
               <img
                 src={detail.image}
@@ -207,7 +207,7 @@ const ProductDetail = () => {
                 alt={detail.name}
               />
             </div>
-            <div className="lg:pl-10 lg:pr-20 flex-wrap pt-10">
+            <div className="lg:pl-10 md:pl-10 lg:pr-20 flex-wrap pt-10">
               <div className="mb-2 text-3xl font-bold tracking-tight text-gray-900">
                 {detail.name}
               </div>
@@ -242,20 +242,20 @@ const ProductDetail = () => {
               </div>
             </div>
           </div>
-          <div className="bg-white mt-8 pt-5 pl-12 pr-12 pb-12 lg:block md:block hidden">
+          <div className="bg-white p-5 lg:p-12  lg:mt-8 pt-5 lg:pl-12 pr-12 lg:pb-12 pb-6 block">
             <div className="font-semibold mb-2">Description :</div>
             <div className="">
               {detail.description == null ? (
-                <p>{detail.description}</p>
-              ) : (
                 <p>Tidak Ada Description</p>
+              ) : (
+                <p>{detail.description}</p>
               )}
             </div>
           </div>
 
-          <div className="lg:block flex">
-            <div className="lg:hidden md:hidden block ml-10">
-              <div className="bg-[#6E205E] rounded-xl flex items-center justify-between py-2 mr-4 ">
+          <div className="lg:block flex justify-center lg:p-2 p-4">
+            <div className="lg:hidden md:hidden block lg:ml-10 lg:mr-0 mr-2">
+              <div className="bg-[#6E205E] rounded-xl flex items-center justify-between py-2 ">
                 <button
                   className={`px-4 pl-5 text-white  cursor-pointer hover:opacity-70 duration-500 ${
                     quantity === 1 ? "opacity-50 cursor-not-allowed" : ""
@@ -275,12 +275,12 @@ const ProductDetail = () => {
               </div>
             </div>
 
-            <div className="flex ">
+            <div className="lg:flex">
               <div className="lg:w-4/5"></div>
-              <div className="mb-5">
+              <div className="">
                 {" "}
                 <button
-                  className="text-white bg-[#6E205E] rounded-xl  font-semibold lg:pl-20 lg:pr-20 md:pl-20 md:pr-20 pl-10 pr-10 py-2"
+                  className="text-white bg-[#6E205E] rounded-xl  font-semibold lg:pl-20 lg:pr-20 md:pl-20 md:pr-20 pl-8 pr-8 py-2"
                   onClick={handleAddToCart}
                 >
                   Add To Cart

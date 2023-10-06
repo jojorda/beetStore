@@ -141,6 +141,10 @@ const Dashboard = () => {
               slidesPerView={1}
               spaceBetween={10}
               loop={true}
+              navigation={{
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+              }}
               pagination={{
                 clickable: true,
               }}
@@ -149,7 +153,7 @@ const Dashboard = () => {
                 disableOnInteraction: false,
               }}
               modules={[Autoplay, Pagination, Navigation]}
-              className="mySwiper max-w-2xl lg:mt-2 md:mt-2 md:rounded-xl lg:rounded-xl flex justify-center items-center"
+              className="mySwiper max-w-2xl lg:mt-2 md:mt-2 md:rounded-xl lg:rounded-xl flex justify-center items-center relative  group"
             >
               <SwiperSlide>
                 <div className="h-full w-full ">
@@ -161,6 +165,8 @@ const Dashboard = () => {
                   <img src={bnr2} className="object-cover" alt="Slider 2" />
                 </div>
               </SwiperSlide>
+              <div className="swiper-button-prev absolute lg:-left-2.5 md:-left-2.5 shadow-xl transform translate-y-1/2 lg:w-10 lg:h-10 md:w-10 md:h-10 h-7 w-7 bg-white rounded-full flex items-center justify-center cursor-pointer text-white opacity-0 group-hover:bg-white  group-hover:text-[#6E205E] group-hover:shadow group-hover:opacity-100 transition duration-300"></div>
+              <div className="swiper-button-next absolute lg:-right-2.5 md:-right-2.5 transform translate-y-1/2 lg:w-10 lg:h-10 md:w-10 md:h-10 h-7 w-7 bg-white rounded-full flex items-center justify-center  cursor-pointer text-white opacity-0 group-hover:bg-white  group-hover:text-[#6E205E] group-hover:shadow  group-hover:opacity-100 transition duration-300"></div>
             </Swiper>
           </div>
           {/* <div>

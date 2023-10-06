@@ -100,7 +100,7 @@ const ProductKeranjang = () => {
       imageUrl: Mt,
       imageWidth: 300,
       imageHeight: 200,
-      html: '<p class="text-sm text-gray-400 font-semibold">Belum Tersedia Saat Ini :(</p>', 
+      html: '<p class="text-sm text-gray-400 font-semibold">Belum Tersedia Saat Ini :(</p>',
       showConfirmButton: false,
       timer: 2000, // Menampilkan alert selama 1,5 detik
     });
@@ -136,7 +136,7 @@ const ProductKeranjang = () => {
       <Topbar products={cart} loading={loading} />
       <div className="pt-20">
         <div className="lg:pl-12 p-5 lg:flex-1 md:flex block">
-          <div className="lg:w-2/3">
+          <div className="lg:w-2/3 md:w-2/3">
             <h2 className="text-2xl font-bold mb-4">Keranjang Belanja</h2>
 
             {cart && cart.length === 0 ? (
@@ -224,11 +224,11 @@ const ProductKeranjang = () => {
             )}
           </div>
           {/* Total Harga */}
-          <div className="lg:w-1/3">
+          <div className="lg:w-1/3 md:w-1/2 md:pt-4">
             <div className="lg:pl-10 md:pl-5 w-full">
-              <div className="border border-[#6E205E] mt-8 p-3 rounded-2xl">
+              <div className="border border-[#e4c0dd] mt-8 p-3 rounded-2xl">
                 <div className="flex">
-                  <div className=" text-gray-500 lg:w-3/6 w-3/4">
+                  <div className=" text-gray-500 md:w-2/3 w-3/4">
                     <div>Total Harga :</div>
                   </div>
                   <div className="">

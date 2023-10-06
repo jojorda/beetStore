@@ -101,11 +101,11 @@ const Profile = () => {
   };
   return (
     <>
-      <div className="lg:p-20 p-10 lg:flex lg:mr-10 mr-0 justify-center">
+      <div className="lg:p-10 p-5 md:pt-10 lg:flex md:flex lg:mr-10 md:mr-20 mr-0 justify-center items-center">
         <div className="font-semibold lg:hidden md:hidden block mb-4">
           Edit Profile
         </div>
-        <div className="  md:w-1/5 mb-5 md:mb-0">
+        <div className="md:w-1/2 lg:w-1/5 mb-5 md:mb-0">
           <div className="relative flex items-center justify-center">
             <label
               htmlFor="imageInput"

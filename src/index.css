@@ -53,11 +53,7 @@
     height: 100%;
     object-fit: cover;
   }
-.swiper-button-prev,
-.swiper-button-next {
-  width: 20px;
-  height: 20px;
-}
+
 
 /* Misalnya, mengubah ukuran ikon panah */
 .swiper-button-prev::after,

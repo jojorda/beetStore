@@ -50,7 +50,7 @@ const ProductList_ = ({ searchTerm, selectedCategory }) => {
   };
 
   return (
-    <div className="px-3 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 mt-8">
+    <div className="px-3 sm:px-8 lg:px-12 xl:px-16 2xl:px-24">
       <div className="font-bold text-gray-900 mb-3 text-xl">Daftar Produk</div>
       {loading ? (
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
