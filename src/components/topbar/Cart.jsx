@@ -222,32 +222,36 @@ const Cart = () => {
             </div>
           )}
         </div>
-        {/* Total Harga */}
-        <div className="text-sm">
-          <div className=" w-full ">
-            <div className="border border-[#6E205E] mt-8 p-3 rounded-xl">
-              <div className="flex">
-                <div className=" text-gray-500  w-3/5">
-                  <div>Total Harga :</div>
-                </div>
-                <div className="">
-                  <div>Rp {calculateTotalPrice()}</div>
+        {cart && cart.length === 0 ? (
+          <div></div>
+        ) : (
+          <div className="text-sm">
+            <div className=" w-full ">
+              <div className="border border-[#6E205E] mt-8 p-3 rounded-xl">
+                <div className="flex">
+                  <div className=" text-gray-500  w-3/5">
+                    <div>Total Harga :</div>
+                  </div>
+                  <div className="">
+                    <div>Rp {calculateTotalPrice()}</div>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Tombol Check Out */}
+              {/* Tombol Check Out */}
 
-            <div className="pt-10">
-              <button
-                className="bg-[#6E205E] text-white w-full p-2 hover:bg-[#8f387d] rounded-2xl"
-                onClick={handleCheckout}
-              >
-                Check Out
-              </button>
+              <div className="pt-10">
+                <button
+                  className="bg-[#6E205E] text-white w-full p-2 hover:bg-[#8f387d] rounded-2xl"
+                  onClick={handleCheckout}
+                >
+                  Check Out
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        )}
+        {/* Total Harga */}
       </div>
     </div>
   );

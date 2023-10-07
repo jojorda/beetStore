@@ -137,10 +137,10 @@ const ProductKeranjang = () => {
       <div className="pt-20">
         <div className="lg:pl-12 p-5 lg:flex-1 md:flex block">
           <div className="lg:w-2/3 md:w-2/3">
-            <h2 className="text-2xl font-bold mb-4">Keranjang Belanja</h2>
+            <h2 className="text-2xl font-bold">Keranjang Belanja</h2>
 
             {cart && cart.length === 0 ? (
-              <div className="block text-center m-0">
+              <div className="text-center flex justify-center lg:pl-64 md:pl-56">
                 {" "}
                 {/* Menambahkan class "text-center" untuk pusatkan teks */}
                 <div
@@ -155,7 +155,7 @@ const ProductKeranjang = () => {
                     src={Cr}
                     alt="Keranjang kosong"
                     style={{
-                      maxWidth: "70%", // Maksimum lebar gambar adalah lebar container
+                      maxWidth: "100%", // Maksimum lebar gambar adalah lebar container
                       height: "auto", // Tinggi gambar akan menyesuaikan
                       display: "block", // Agar gambar tidak memiliki margin bawah tambahan
                       margin: "0 auto", // Pusatkan gambar horizontal
@@ -223,32 +223,35 @@ const ProductKeranjang = () => {
               </div>
             )}
           </div>
-          {/* Total Harga */}
-          <div className="lg:w-1/3 md:w-1/2 md:pt-4">
-            <div className="lg:pl-10 md:pl-5 w-full">
-              <div className="border border-[#e4c0dd] mt-8 p-3 rounded-2xl">
-                <div className="flex">
-                  <div className=" text-gray-500 md:w-2/3 w-3/4">
-                    <div>Total Harga :</div>
-                  </div>
-                  <div className="">
-                    <div>Rp {calculateTotalPrice()}</div>
+          {cart && cart.length === 0 ? (
+            <div></div>
+          ) : (
+            <div className="lg:w-1/3 md:w-1/2 md:pt-4">
+              <div className="lg:pl-10 md:pl-5 w-full">
+                <div className="border border-[#e4c0dd] mt-8 p-3 rounded-2xl">
+                  <div className="flex">
+                    <div className=" text-gray-500 md:w-2/3 w-3/4">
+                      <div>Total Harga :</div>
+                    </div>
+                    <div className="">
+                      <div>Rp {calculateTotalPrice()}</div>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Tombol Check Out */}
+                {/* Tombol Check Out */}
 
-              <div className="pt-10">
-                <button
-                  className="bg-[#6E205E] text-white w-full p-2 hover:bg-[#8f387d] rounded-2xl"
-                  onClick={handleCheckout}
-                >
-                  Check Out
-                </button>
+                <div className="pt-10">
+                  <button
+                    className="bg-[#6E205E] text-white w-full p-2 hover:bg-[#8f387d] rounded-2xl"
+                    onClick={handleCheckout}
+                  >
+                    Check Out
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </>

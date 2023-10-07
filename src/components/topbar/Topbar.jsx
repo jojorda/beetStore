@@ -93,7 +93,7 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
     setIsOpen(!isOpen);
   };
   const navigate = useNavigate();
-  
+
   const logout = () => {
     localStorage.clear();
     Swal.fire({
@@ -168,7 +168,7 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
                 )}
 
                 <div className="flex">
-                  <div className="lg:text-xl text-xl mr-4 mt-1.5">
+                  <div className="lg:text-xl text-xl mr-4 mt-1 lg:mt-1.5">
                     <div className="relative text-left bottom-3">
                       <Link
                         to={"/products/keranjang"}
@@ -323,7 +323,7 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
                 ) : (
                   <>
                     {user.length ? (
-                      <div className="md:block hidden mb-8 p-1">
+                      <div className="md:block hidden mb-7 p-1">
                         {" "}
                         <ul className="flex fixed mr-5 right-0">
                           <li className="">
