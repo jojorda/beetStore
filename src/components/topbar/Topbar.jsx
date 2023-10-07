@@ -497,10 +497,10 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
                     </div>
                   ) : (
                     <div className="block md:hidden">
-                      <div className="w-full">
+                      <div className="w-full mb-4 mt-4 flex justify-center">
                         <Link
                           to={"/"}
-                          className="mt-5 py-2.5 px-5  mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-xl border border-[#6E205E] hover:bg-gray-100 hover:text-[#6E205E] focus:ring-4 focus:ring-gray-200"
+                          className="mt-5 py-2.5 px-5 w-full text-center font-semibold  mb-2 text-sm text-gray-700 focus:outline-none bg-white rounded-xl border border-[#6E205E] hover:bg-gray-100 hover:text-[#6E205E] focus:ring-4 focus:ring-gray-200"
                         >
                           Login
                         </Link>
