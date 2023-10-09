@@ -41,8 +41,8 @@ const CheckOut = () => {
   return (
     <>
       <Topbar products={cart} loading={loading} />
-      <div className="container mx-auto pt-8 md:pt-24">
-        <div className="bg-white shadow-lg rounded-lg p-4 md:p-8">
+      <div className="container p-2 mx-auto pt-24">
+        <div className="bg-white shadow-lg rounded-lg lg:p-4 p-3.5 md:p-8">
           <h1 className="text-2xl font-semibold mb-4">Checkout</h1>
 
           <div className="mb-4 md:space-x-8">
