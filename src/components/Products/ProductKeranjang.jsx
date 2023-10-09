@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import Mt from "../../assets/mt.jpg";
 import Cr from "../../assets/cart.jpg";
 import { Link } from "react-router-dom";
+import Ms from "../../assets/ms.png";
 
 const ProductKeranjang = () => {
   const [cart, setCart] = useState([]);
@@ -166,10 +167,15 @@ const ProductKeranjang = () => {
                   >
                     <div className="flex justify-start p-3">
                       <img
-                        src={item.image}
+                        src={Ms}
                         alt=""
                         className="shadow w-20 h-20 border rounded-md"
                       />
+                      {/* <img
+                        src={item.image}
+                        alt=""
+                        className="shadow w-20 h-20 border rounded-md"
+                      /> */}
                     </div>
                     <div className="flex-1 lg:pl-5 lg:pr-20 pt-3">
                       <div className="mb-2 lg:text-xl md:text-lg text-sm font-semibold tracking-tight text-gray-900">

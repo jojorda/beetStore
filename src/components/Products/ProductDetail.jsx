@@ -6,6 +6,7 @@ import ProductKeranjang from "./ProductKeranjang";
 import Loading from "../Loading/Loading";
 import Swal from "sweetalert2";
 import { FaMinus, FaPlus } from "react-icons/fa";
+import Ms from "../../assets/ms.png";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -198,11 +199,11 @@ const ProductDetail = () => {
           <div className="lg:p-12 p-5 sm:p-7 flex flex-wrap md:justify-center lg:flex-nowrap bg-white">
             <div className="flex-wrap shadow-lg rounded-xl">
               <img
-                src={detail.image}
+                src={Ms}
                 className="rounded-xl"
                 style={{
                   width: "290px",
-                  height: "260px",
+                  height: "290px",
                 }}
                 alt={detail.name}
               />
