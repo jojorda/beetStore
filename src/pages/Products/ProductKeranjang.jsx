@@ -1,5 +1,5 @@
 import ProductKeranjang2 from "../../components/Products/ProductKeranjang";
-import Topbar2 from "../../components/topbar/Topbar2";
+import BottomBar from "../../components/bottombar/BottomBar";
 
 const ProductKeranjang = () => {
   return (
@@ -8,6 +8,7 @@ const ProductKeranjang = () => {
       <div className="">
         <ProductKeranjang2 />
       </div>
+      <BottomBar/>
     </>
   );
 };

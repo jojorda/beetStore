@@ -7,7 +7,7 @@ import ProductsList from "./pages/Products/ProductsList";
 import ProductsDetail from "./pages/Products/ProductsDetail";
 import ProductKeranjang from "./pages/Products/ProductKeranjang";
 import Profile from "./pages/Account/Profile";
-
+import CheckOut from "./pages/Products/CheckOut";
 
 function App() {
   return (
@@ -29,6 +29,7 @@ function App() {
             element={<ProductKeranjang />}
           />
           <Route exact path="/profile/:id" element={<Profile />} />
+          <Route exact path="/CheckOut" element={<CheckOut />} />
         </Routes>
       </BrowserRouter>
     </>

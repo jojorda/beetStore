@@ -5,6 +5,7 @@ import Topbar from "../topbar/Topbar";
 import Swal from "sweetalert2";
 import Mt from "../../assets/mt.jpg";
 import Cr from "../../assets/cart.jpg";
+import { Link } from "react-router-dom";
 
 const ProductKeranjang = () => {
   const [cart, setCart] = useState([]);
@@ -140,26 +141,14 @@ const ProductKeranjang = () => {
             <h2 className="text-2xl font-bold">Keranjang Belanja</h2>
 
             {cart && cart.length === 0 ? (
-              <div className="text-center flex justify-center lg:pl-64 md:pl-56">
+              <div className="text-center flex justify-center lg:pl-96 md:pl-56">
                 {" "}
                 {/* Menambahkan class "text-center" untuk pusatkan teks */}
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
+                <div className="flex flex-col justify-center items-center">
                   <img
                     src={Cr}
                     alt="Keranjang kosong"
-                    style={{
-                      maxWidth: "100%", // Maksimum lebar gambar adalah lebar container
-                      height: "auto", // Tinggi gambar akan menyesuaikan
-                      display: "block", // Agar gambar tidak memiliki margin bawah tambahan
-                      margin: "0 auto", // Pusatkan gambar horizontal
-                    }}
+                    className="max-w-full h-auto block m-0"
                   />
                   <div className="font-semibold text-gray-500">
                     {" "}
@@ -172,7 +161,7 @@ const ProductKeranjang = () => {
               <div>
                 {cart.map((item) => (
                   <div
-                    className="flex flex-wrap justify-between items-center border border-[#6E205E] rounded-lg mb-4"
+                    className="flex mt-3 flex-wrap justify-between items-center border border-[#6E205E] rounded-lg mb-4"
                     key={item.id}
                   >
                     <div className="flex justify-start p-3">
@@ -226,7 +215,7 @@ const ProductKeranjang = () => {
           {cart && cart.length === 0 ? (
             <div></div>
           ) : (
-            <div className="lg:w-1/3 md:w-1/2 md:pt-4">
+            <div className="lg:w-1/3  md:w-1/2 md:pt-4">
               <div className="lg:pl-10 md:pl-5 w-full">
                 <div className="border border-[#e4c0dd] mt-8 p-3 rounded-2xl">
                   <div className="flex">
@@ -241,13 +230,21 @@ const ProductKeranjang = () => {
 
                 {/* Tombol Check Out */}
 
-                <div className="pt-10">
-                  <button
+                <div className="pt-10 ">
+                  {/* <button
                     className="bg-[#6E205E] text-white w-full p-2 hover:bg-[#8f387d] rounded-2xl"
                     onClick={handleCheckout}
                   >
                     Check Out
-                  </button>
+                  </button> */}
+                  <div className="w-full">
+                    {" "}
+                    <Link to={"/CheckOut"}>
+                      <button className="bg-[#6E205E] text-white w-full p-2 hover:bg-[#8f387d] rounded-2xl">
+                        Check Out
+                      </button>
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>

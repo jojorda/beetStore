@@ -5,6 +5,7 @@ import Topbar from "../topbar/Topbar";
 import Swal from "sweetalert2";
 import Mt from "../../assets/mt.jpg";
 import Cr from "../../assets/cart.jpg";
+import { Link } from "react-router-dom";
 
 const Cart = () => {
   const [cart, setCart] = useState([]);
@@ -241,12 +242,11 @@ const Cart = () => {
               {/* Tombol Check Out */}
 
               <div className="pt-10">
-                <button
-                  className="bg-[#6E205E] text-white w-full p-2 hover:bg-[#8f387d] rounded-2xl"
-                  onClick={handleCheckout}
-                >
-                  Check Out
-                </button>
+                <Link to={"/CheckOut"}>
+                  <button className="bg-[#6E205E] text-white w-full p-2 hover:bg-[#8f387d] rounded-2xl">
+                    Check Out
+                  </button>
+                </Link>
               </div>
             </div>
           </div>
