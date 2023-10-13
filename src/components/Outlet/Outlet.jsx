@@ -12,6 +12,7 @@ const Outlet = ({ searchTermOutlet }) => {
 
   const [visibleData, setVisibleData] = useState([]);
 
+  const API_URL = import.meta.env.VITE_API_KEY;
   // console.log(searchTermOutlet);
   useEffect(() => {
     const filterProductsByCategory = () => {
@@ -38,6 +39,7 @@ const Outlet = ({ searchTermOutlet }) => {
   return (
     <div className="px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 mt-8">
       <div className="font-bold text-gray-900 mb-4 text-xl">Daftar Outlet</div>
+
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
           <LoadingProduct />
@@ -78,10 +80,19 @@ const Outlet = ({ searchTermOutlet }) => {
                       <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
                     </svg>
                   </div> */}
-                  <div className="flex justify-center items-center bg-gray-300 rounded-t-lg">
+                  {/* <div className="flex justify-center items-center bg-gray-300 rounded-t-lg">
                     <img
                       src={Lg}
                       className="w-auto  h-36 object-cover rounded-t-lg"
+                    />
+                  </div> */}
+                  <div className="flex justify-center items-center bg-gray-300 rounded-t-lg">
+                    <img
+                      src={
+                        item.image == null ? Lg  : `${API_URL}/${item.image}` // Gunakan Lg sebagai sumber gambar default jika item.image == null
+                      }
+                      className="w-auto h-36 object-cover rounded-t-lg"
+                      alt={item.name}
                     />
                   </div>
                   <div className="p-4">
@@ -119,6 +130,7 @@ const Outlet = ({ searchTermOutlet }) => {
               </div>
             )}
           </div>
+
           {/* close products list */}
         </div>
       )}

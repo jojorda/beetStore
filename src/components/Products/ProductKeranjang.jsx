@@ -7,11 +7,22 @@ import Mt from "../../assets/mt.jpg";
 import Cr from "../../assets/cart.jpg";
 import { Link } from "react-router-dom";
 import Ms from "../../assets/ms.png";
+import Lg from "../../assets/logo.png";
+import CheckOut from "./CheckOut";
 
 const ProductKeranjang = () => {
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(true);
+  const API_URL = import.meta.env.VITE_API_KEY;
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
   useEffect(() => {
     // Mengambil data dari localStorage
     const cartData = JSON.parse(localStorage.getItem("cart")) || [];
@@ -166,16 +177,18 @@ const ProductKeranjang = () => {
                     key={item.id}
                   >
                     <div className="flex justify-start p-3">
-                      <img
+                      {/* <img
                         src={Ms}
                         alt=""
                         className="shadow w-20 h-20 border rounded-md"
-                      />
-                      {/* <img
-                        src={item.image}
-                        alt=""
-                        className="shadow w-20 h-20 border rounded-md"
                       /> */}
+                      <img
+                        src={
+                          item.image == null ? Lg : `${API_URL}/${item.image}` // Gunakan Lg sebagai sumber gambar default jika item.image == null
+                        }
+                        alt=""
+                        className="shadow object-cover w-20 h-20 border rounded-md"
+                      />
                     </div>
                     <div className="flex-1 lg:pl-5 lg:pr-20 pt-3">
                       <div className="mb-2 lg:text-xl md:text-lg text-sm font-semibold tracking-tight text-gray-900">
@@ -245,11 +258,18 @@ const ProductKeranjang = () => {
                   </button> */}
                   <div className="w-full">
                     {" "}
-                    <Link to={"/CheckOut"}>
+                    {/* Tombol untuk membuka modal */}
+                    <button
+                      onClick={openModal}
+                      className="bg-[#6E205E] w-full text-white px-20 py-2 rounded-2xl hover:bg-[#8f387d]"
+                    >
+                      CheckOut
+                    </button>
+                    {/* <Link to={"/CheckOut"}>
                       <button className="bg-[#6E205E] text-white w-full p-2 hover:bg-[#8f387d] rounded-2xl">
                         Check Out
                       </button>
-                    </Link>
+                    </Link> */}
                   </div>
                 </div>
               </div>
@@ -257,6 +277,14 @@ const ProductKeranjang = () => {
           )}
         </div>
       </div>
+      {isModalOpen && (
+        <CheckOut
+          isOpen={isModalOpen}
+          closeModal={closeModal}
+          loading={loading}
+          content={<CheckOut isOpen={isModalOpen} closeModal={closeModal} />}
+        />
+      )}
     </>
   );
 };

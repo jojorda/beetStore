@@ -34,6 +34,7 @@ const ProductList = () => {
             },
           }
         );
+        console.log(response);
         setProducts(response.data.data);
         setSearchTerm(response.data.data);
 

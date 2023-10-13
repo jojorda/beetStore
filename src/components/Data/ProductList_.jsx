@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import LoadingProduct from "../Loading/LoadingProduct";
 import { Link } from "react-router-dom";
 import Pro from "../../assets/pro.jpg";
-import Ms from "../../assets/ms.png";
-
+import Lg from "../../assets/logo.png";
 const ProductList_ = ({ searchTerm, selectedCategory }) => {
   const [loading, setLoading] = useState(true);
   const [showMore, setShowMore] = useState(false);
@@ -11,7 +10,8 @@ const ProductList_ = ({ searchTerm, selectedCategory }) => {
   const [visibleData, setVisibleData] = useState([]);
   const [showNotFound, setShowNotFound] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false); // State baru untuk loading tombol "Muat Lebih Banyak"
-
+  const API_URL = import.meta.env.VITE_API_KEY;
+  
   useEffect(() => {
     const filterProductsByCategory = () => {
       if (!selectedCategory || selectedCategory === "all") {
@@ -106,9 +106,11 @@ const ProductList_ = ({ searchTerm, selectedCategory }) => {
                       </div> */}
                       <div className="flex justify-center items-center">
                         <img
-                          src={Ms}
+                          src={
+                            item.image == null ? Lg : `${API_URL}/${item.image}` // Gunakan Lg sebagai sumber gambar default jika item.image == null
+                          }
+                          className="w-auto h-36 object-cover  rounded-t-lg"
                           alt={item.name}
-                          className="w-full h-40 object-cover rounded-t-lg"
                         />
                       </div>
                       <div className="p-4">

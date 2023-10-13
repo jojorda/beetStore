@@ -29,6 +29,7 @@ const Dashboard = () => {
             Authorization: `Bearer ${token}`,
           },
         });
+
         setOutlet(response.data.data);
         setSearchTermOutlet(response.data.data);
         setLoading(false);

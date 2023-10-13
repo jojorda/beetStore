@@ -5,6 +5,8 @@ import Swal from "sweetalert2";
 const initialState = {
   user: null,
   userRegister: null,
+  userForgotPassword: null,
+  userNewPassword: null,
   isError: false,
   isSucces: false,
   isLoading: false,
@@ -104,7 +106,120 @@ export const RegisterUser = createAsyncThunk("user/RegisterUser", async (userReg
     }
   }
 });
+export const ForgotPasswordUser = createAsyncThunk("user/ForgotPasswordUser", async (userForgotPassword, thunkAPI) => {
+  try {
+    const API_URL = import.meta.env.VITE_API_KEY;
+    const response = await axios.post(`${API_URL}/api/v1/customer-account-noverify/forgot-password`, {
+      email: userForgotPassword.email,
+    });
+    // withCredentials = false
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "top-right",
+      iconColor: "green",
+      customClass: {
+        popup: "colored-toast",
+      },
+      showConfirmButton: false,
+      timer: 2000,
+      timerProgressBar: true,
+    });
+    Toast.fire({
+      icon: "success",
+      text: "Success, Silahkan ganti password dengan yang baru",
+    }).then(() => {
+      // Setelah SweetAlert ditutup, muat ulang halaman
+      window.location.replace("/new_Password");
+    });
+    // console.log(response.data.data.payload.customer_account_id);
+    console.log(response.data?.data);
+    localStorage.setItem("data", response.data?.data, true);
+    // localStorage.setItem("user", response.data.data.payload.customer_account_id, true);
+    // console.log("Bearer", response);
+    // console.log(response.data);
 
+    return response.data;
+  } catch (error) {
+    if (error.response) {
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-right",
+        iconColor: 'red',
+        customClass: {
+          popup: 'colored-toast'
+        },
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+      });
+      Toast.fire({
+        icon: "error",
+        text: error.response.data.message,
+      });
+      const message = error.response.data.message;
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+});
+export const NewPasswordUser = createAsyncThunk("user/NewPasswordUser", async (userNewPassword, thunkAPI) => {
+  try {
+    const token = localStorage.getItem("data");
+    const API_URL = import.meta.env.VITE_API_KEY;
+    const response = await axios.post(`${API_URL}/api/v1/customer-account/new-password`, {
+      new_password:userNewPassword.new_password,
+    },  {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    // withCredentials = false
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "top-right",
+      iconColor: "green",
+      customClass: {
+        popup: "colored-toast",
+      },
+      showConfirmButton: false,
+      timer: 2000,
+      timerProgressBar: true,
+    });
+    Toast.fire({
+      icon: "success",
+      text: "Success, Password Berhasil di Ubah",
+    }).then(() => {
+      // Setelah SweetAlert ditutup, muat ulang halaman
+      localStorage.clear();
+      window.location.replace("/");
+    });
+
+    // console.log(response);
+
+    return response.data;
+  } catch (error) {
+    if (error.response) {
+      console.log(error.response)
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-right",
+        iconColor: 'red',
+        customClass: {
+          popup: 'colored-toast'
+        },
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+      });
+      Toast.fire({
+        icon: "error",
+        text: error.response.data.message,
+      });
+      const message = error.response.data.message;
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+});
 export const rootReducer = (state = initialState, action) => {
   switch (action.type) {
     case "LOGIN":
@@ -195,7 +310,36 @@ export const authSlice = createSlice({
       state.isError = true;
       state.message = action.payload;
     });
+   
+    //ForgotPasswordUser
+    builder.addCase(ForgotPasswordUser.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(ForgotPasswordUser.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.isSucces = true;
+      state.user = action.payload;
+    });
+    builder.addCase(ForgotPasswordUser.rejected, (state, action) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.message = action.payload;
+    });
 
+    //NewPasswordUser
+    builder.addCase(NewPasswordUser.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(NewPasswordUser.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.isSucces = true;
+      state.user = action.payload;
+    });
+    builder.addCase(NewPasswordUser.rejected, (state, action) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.message = action.payload;
+    });
     // get user Login
     builder.addCase(getMe.pending, (state) => {
       state.isLoading = true;

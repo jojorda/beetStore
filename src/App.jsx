@@ -8,6 +8,7 @@ import ProductsDetail from "./pages/Products/ProductsDetail";
 import ProductKeranjang from "./pages/Products/ProductKeranjang";
 import Profile from "./pages/Account/Profile";
 import CheckOut from "./pages/Products/CheckOut";
+import NewPassword from "./Auth/NewPassword";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Routes>
           <Route exact path="/" element={<Login />} />
           <Route exact path="/forgotPassword" element={<Forgot />} />
+          <Route exact path="/new_Password" element={<NewPassword />} />
           <Route exact path="/dashboard" element={<Dashboard />} />
           <Route exact path="/products/:id" element={<ProductsList />} />
           <Route

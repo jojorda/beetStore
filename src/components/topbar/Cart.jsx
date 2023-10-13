@@ -7,11 +7,22 @@ import Mt from "../../assets/mt.jpg";
 import Cr from "../../assets/cart.jpg";
 import { Link } from "react-router-dom";
 import Ms from "../../assets/ms.png";
+import Lg from "../../assets/logo.png";
+import CheckOut from "../Products/CheckOut";
 
 const Cart = () => {
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(true);
+  const API_URL = import.meta.env.VITE_API_KEY;
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
   useEffect(() => {
     // Mengambil data dari localStorage
     const cartData = JSON.parse(localStorage.getItem("cart")) || [];
@@ -135,7 +146,7 @@ const Cart = () => {
       });
   };
   return (
-    <div className="">
+    <>
       <div className="block">
         <div className="">
           <h2 className="text-sm font-bold mb-4">Keranjang Belanja</h2>
@@ -177,16 +188,18 @@ const Cart = () => {
                   key={item.id}
                 >
                   <div className="flex pl-2">
-                    <img
+                    {/* <img
                       src={Ms}
                       alt=""
                       className="shadow w-20 h-20 border rounded-md"
-                    />
-                    {/* <img
-                      src={item.image}
-                      alt=""
-                      className="shadow w-20 h-20 border rounded-md"
                     /> */}
+                    <img
+                      src={
+                        item.image == null ? Lg : `${API_URL}/${item.image}` // Gunakan Lg sebagai sumber gambar default jika item.image == null
+                      }
+                      alt=""
+                      className="shadow object-cover w-20 h-20 border rounded-md"
+                    />
                   </div>
                   <div className="flex-1 pl-3 pt-3">
                     <div className="mb-2 text-sm font-semibold tracking-tight text-gray-900">
@@ -248,18 +261,33 @@ const Cart = () => {
               {/* Tombol Check Out */}
 
               <div className="pt-10">
-                <Link to={"/CheckOut"}>
+                <button
+                  onClick={openModal}
+                  className="bg-[#6E205E] w-full text-white px-20 py-2 rounded-2xl hover:bg-[#8f387d]"
+                >
+                  CheckOut
+                </button>
+                {/* <Link to={"/CheckOut"}>
                   <button className="bg-[#6E205E] text-white w-full p-2 hover:bg-[#8f387d] rounded-2xl">
                     Check Out
                   </button>
-                </Link>
+                </Link> */}
               </div>
             </div>
           </div>
         )}
         {/* Total Harga */}
       </div>
-    </div>
+      {isModalOpen && (
+        <CheckOut
+          className="font-normal"
+          isOpen={isModalOpen}
+          closeModal={closeModal}
+          loading={loading}
+          content={<CheckOut isOpen={isModalOpen} closeModal={closeModal} />}
+        />
+      )}
+    </>
   );
 };
 

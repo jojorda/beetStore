@@ -7,6 +7,7 @@ import Loading from "../Loading/Loading";
 import Swal from "sweetalert2";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import Ms from "../../assets/ms.png";
+import Lg from "../../assets/logo.png";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -14,7 +15,7 @@ const ProductDetail = () => {
   const [loading, setLoading] = useState(true);
   const [cart, setCart] = useState([]);
   const [quantity, setQuantity] = useState(1);
-
+  const API_URL = import.meta.env.VITE_API_KEY;
   useEffect(() => {
     const getData = async () => {
       try {
@@ -30,7 +31,7 @@ const ProductDetail = () => {
             },
           }
         );
-
+        console.log(response);
         setDetail(response.data.data);
         setLoading(false);
       } catch (error) {
@@ -42,6 +43,19 @@ const ProductDetail = () => {
     };
     getData();
   }, [id]);
+  const openModal = (imageUrl) => {
+    // Fungsi untuk membuka modal
+    const modalImage = document.getElementById("modalImage");
+    modalImage.src = imageUrl;
+    const modal = document.getElementById("imageModal");
+    modal.classList.remove("hidden");
+  };
+
+  const closeModal = () => {
+    // Fungsi untuk menutup modal
+    const modal = document.getElementById("imageModal");
+    modal.classList.add("hidden");
+  };
   useEffect(() => {
     const getData1 = async () => {
       try {
@@ -83,7 +97,10 @@ const ProductDetail = () => {
     if (detail) {
       const itemToAdd = {
         id: detail.id,
+        business_id: detail.business_id,
+        outlet_id: detail.outlet_id,
         name: detail.name,
+        image: detail.image,
         price: detail.price,
         quantity: quantity,
       };
@@ -197,15 +214,21 @@ const ProductDetail = () => {
       ) : (
         <div className="bg-gray-100  pt-14" key={detail.id}>
           <div className="lg:p-12 p-5 sm:p-7 flex flex-wrap md:justify-center lg:flex-nowrap bg-white">
-            <div className="flex-wrap shadow-lg rounded-xl">
+            <div className="flex-wrap shadow-xl rounded-xl">
               <img
-                src={Ms}
-                className="rounded-xl"
+                src={detail.image == null ? Lg : `${API_URL}/${detail.image}`}
+                className="w-auto h-36 object-cover rounded-lg cursor-pointer"
                 style={{
                   width: "290px",
                   height: "290px",
                 }}
                 alt={detail.name}
+                onClick={
+                  () =>
+                    openModal(
+                      detail.image == null ? Lg : `${API_URL}/${detail.image}`
+                    ) // Buka modal dengan gambar yang diklik
+                }
               />
             </div>
             <div className="lg:pl-10 md:pl-10 lg:pr-20 flex-wrap pt-10">
@@ -251,6 +274,28 @@ const ProductDetail = () => {
               ) : (
                 <p>{detail.description}</p>
               )}
+            </div>
+          </div>
+
+          {/* Modal gambar */}
+          <div
+            id="imageModal"
+            className="fixed z-50 top-0 left-0 w-full h-full flex hidden items-center justify-center bg-black bg-opacity-60 transition-opacity  rounded-lg"
+          >
+            <div className="relative  max-w-xl mx-auto">
+              <img
+                id="modalImage"
+                src={detail.image == null ? Lg : `${API_URL}/${detail.image}`} // Gunakan gambar default jika gambar modal tidak ada
+                className=" rounded-lg"
+                alt="Modal"
+              />
+              <button
+                id="closeModal"
+                className="absolute top-4 right-4 text-white text-3xl hover:text-[#a02e89]"
+                onClick={() => closeModal()} // Tutup modal saat tombol close diklik
+              >
+                &times;
+              </button>
             </div>
           </div>
 
