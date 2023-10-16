@@ -3,16 +3,16 @@ import Topbar from "../topbar/Topbar";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate, useParams } from "react-router-dom";
-import randomstring from "randomstring";
 import Loading from "../Loading/Loading";
-import Mt from "../../assets/mt.jpg"
+import Mt from "../../assets/mt.jpg";
+import { nanoid } from "nanoid";
 
 function CheckOut({ isOpen, closeModal, content }) {
   const [cart, setCart] = useState([]);
-  const [payment, setPayment] = useState([]);
+  const [payment, setPayment] = useState([10]);
   const [loading, setLoading] = useState(true);
   const [checkoutTime, setCheckoutTime] = useState(new Date());
-  // const [TRANSIDMERCHANT] = useState(randomstring.generate(12));
+  const [TRANSIDMERCHANT] = useState(nanoid(12));
   useEffect(() => {
     const interval = setInterval(() => {
       setCheckoutTime(new Date());
@@ -116,6 +116,7 @@ function CheckOut({ isOpen, closeModal, content }) {
             },
           })
           .then((response) => {
+            console.log(response);
             setPayment(response.data.data.rows);
           })
           .catch((error) => {
@@ -162,18 +163,31 @@ function CheckOut({ isOpen, closeModal, content }) {
     const API_URL = import.meta.env.VITE_API_KEY;
     const token = localStorage.getItem("token");
     const sendData = {
-      items: cart,
-      outlet_id: 4,
-      business_id: 4,
-      customer_account_id: 2,
-      payment_method_id: 2,
+      receipt_id: "1:23/10/15:09:28:52",
+      items: [
+        {
+          product_id: 151,
+          addons: [],
+          quantity: 5,
+          price_product: 5000,
+          price_discount: 0,
+          price_service: 0,
+          price_addons_total: 1000,
+          price_total: 6000,
+          notes: "Semangka",
+        },
+      ],
+      outlet_id: 3,
+      business_id: 3,
+      customer_id: 26,
+      payment_method_id: 10,
       payment_discount: 4000,
-      payment_tax: 0,
-      payment_service: 0,
-      payment_total: 4000,
-      amount: 4,
+      payment_tax: 2000,
+      payment_service: 1000,
+      payment_total: 33000,
+      amount: 60900,
       payment_change: 8000,
-      invoice: 120000,
+      invoice: TRANSIDMERCHANT,
       status: "done",
     };
     try {
@@ -290,7 +304,7 @@ function CheckOut({ isOpen, closeModal, content }) {
                 <div className="text-center">
                   <button
                     className="bg-[#6E205E] text-white px-20 py-2 rounded-2xl hover-bg-[#8f387d]"
-                    onClick={handlePayment}
+                    onClick={handlePayment1}
                   >
                     Bayar
                   </button>

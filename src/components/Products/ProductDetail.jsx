@@ -72,7 +72,7 @@ const ProductDetail = () => {
           }
         );
 
-        console.log(response);
+        // console.log(response);
       } catch (error) {
         if (error.response) {
           console.log(error.response.data.message);
@@ -213,15 +213,11 @@ const ProductDetail = () => {
         </div>
       ) : (
         <div className="bg-gray-100  pt-14" key={detail.id}>
-          <div className="lg:p-12 p-5 sm:p-7 flex flex-wrap md:justify-center lg:flex-nowrap bg-white">
+          <div className="lg:p-12  sm:p-7 flex flex-wrap md:justify-center lg:flex-nowrap bg-white">
             <div className="flex-wrap shadow-xl rounded-xl">
               <img
                 src={detail.image == null ? Lg : `${API_URL}/${detail.image}`}
-                className="w-auto h-36 object-cover rounded-lg cursor-pointer"
-                style={{
-                  width: "290px",
-                  height: "290px",
-                }}
+                className="lg:w-72 lg:h-72 w-screen h-80 object-cover lg:rounded-lg cursor-pointer"
                 alt={detail.name}
                 onClick={
                   () =>
@@ -231,7 +227,7 @@ const ProductDetail = () => {
                 }
               />
             </div>
-            <div className="lg:pl-10 md:pl-10 lg:pr-20 flex-wrap pt-10">
+            <div className="lg:pl-10 p-5 md:pl-10 lg:pr-20 flex-wrap lg:pt-10">
               <div className="mb-2 text-3xl font-bold tracking-tight text-gray-900">
                 {detail.name}
               </div>
@@ -269,7 +265,9 @@ const ProductDetail = () => {
           <div className="bg-white p-5 lg:p-12  lg:mt-8 pt-5 lg:pl-12 pr-12 lg:pb-12 pb-6 block">
             <div className="font-semibold mb-2">Description :</div>
             <div className="">
-              {detail.description == null ? (
+              {detail.description === "null" ? (
+                <p>Tidak Ada Description</p>
+              ) : detail.description === null ? (
                 <p>Tidak Ada Description</p>
               ) : (
                 <p>{detail.description}</p>
