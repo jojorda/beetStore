@@ -21,7 +21,22 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
   const [searchValue, setSearchValue] = useState(""); // State untuk nilai pencarian
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isOpenUser, setIsOpenUser] = useState(false);
+  const [isSearchExpanded, setIsSearchExpanded] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 448);
+
   const location = useLocation();
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 448);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   useEffect(() => {
     // Mengambil data dari localStorage
     const cartData = JSON.parse(localStorage.getItem("cart")) || [];
@@ -122,7 +137,15 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
       setSearchTermOutlet(resultsArray);
     }
   };
+  // Handler untuk mengatur elemen pencarian menjadi full lebar saat diklik
+  const expandSearch = () => {
+    setIsSearchExpanded(true);
+  };
 
+  // Handler untuk mengatur ulang elemen pencarian saat elemen tersebut kehilangan fokus
+  const resetSearchWidth = () => {
+    setIsSearchExpanded(false);
+  };
   // Handler untuk menghapus teks pencarian
   const clearSearch = () => {
     setSearchValue("");
@@ -148,19 +171,19 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
                 ) : (
                   <>
                     {products && products.length > 0 ? (
-                      <div className="w-full lg:pl-0 pl-10  text-white font-semibold pt-3 mt-2  md:mt-3 lg:mt-3 text-center">
+                      <div className="w-full lg:pl-0 pl-10  text-white font-semibold pt-3 mt-2  md:mt-2.5 lg:mt-3 text-center">
                         <div key={products[0].id}>
                           <div>{products[0].Business.name}</div>
                         </div>
                       </div>
                     ) : detail ? (
-                      <div className="w-full lg:pl-0 pl-10 text-white font-semibold pt-3 mt-2 md:mt-3 lg:mt-3 text-center">
+                      <div className="w-full lg:pl-0 pl-10 text-white font-semibold pt-3 mt-2 md:mt-2.5 lg:mt-3 text-center">
                         <div key={detail?.id}>
                           <div>{detail?.Business?.name}</div>
                         </div>
                       </div>
                     ) : (
-                      <div className="w-full lg:pl-0 pl-10 text-white font-semibold pt-3 mt-2.5 md:mt-3 lg:mt-3 text-center">
+                      <div className="w-full lg:pl-0 pl-10 text-white font-semibold pt-3 mt-2.5 md:mt-2.5 lg:mt-3 text-center">
                         Profile
                       </div>
                     )}
@@ -168,7 +191,7 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
                 )}
 
                 <div className="flex">
-                  <div className="lg:text-xl text-xl mr-4 mt-1 lg:mt-1.5">
+                  <div className="lg:text-xl text-xl mr-4 mt-1 lg:mt-1.5 md:mt-2">
                     <div className="relative text-left bottom-3">
                       <Link
                         to={"/products/keranjang"}
@@ -197,7 +220,7 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
                     </div>
                   </div>
 
-                  <div className="lg:mt-3 mt-5 text-white">
+                  <div className="lg:mt-3 md:mt-4 mt-5 text-white">
                     {" "}
                     <Link to={"/dashboard"}>
                       <img src={Lg} className="bg-transparent lg:w-40 w-40" />
@@ -211,19 +234,30 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
           <nav className="bg-[#6E205E] shadow-md fixed w-full z-50  mx-auto px-4 sm:px-6 lg:px-8">
             <div className="lg:block md:block flex items-center justify-between h-20">
               <div className="flex items-center">
-                <div className="flex-shrink-0 ">
-                  {" "}
-                  <Link to={"/dashboard"}>
+                {isSearchExpanded ? (
+                  // Logo dan tombol toggle akan disembunyikan saat isSearchExpanded true
+                  <div className="w-0 h-0 overflow-hidden">
                     <img
                       src={Lg}
-                      className="bg-transparent lg:w-40 w-28 mt-2 lg:mt-0"
+                      className="bg-transparent lg:w-40 w-28 lg:mt-0"
                     />
-                  </Link>
-                </div>
-                <div className="w-full  lg:pr-10 pr-3">
+                  </div>
+                ) : (
+                  <div className="flex-shrink-0">
+                    <Link to={"/dashboard"}>
+                      <img
+                        src={Lg}
+                        className="bg-transparent lg:w-40 w-28 lg:mt-0"
+                      />
+                    </Link>
+                  </div>
+                )}
+                <div className="w-full lg:pr-10 pr-2">
                   {" "}
                   <form
-                    className="lg:pt-0 pt-2 pl-2 lg:pl-10"
+                    className={`lg:pt-0 pl-2 lg:pl-10 ${
+                      isSearchExpanded ? "pl-0 w-screen pr-8" : ""
+                    }`}
                     onSubmit={handleSubmit}
                   >
                     <div className="relative">
@@ -246,11 +280,16 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
                       </div>
                       <input
                         type="text"
-                        value={searchValue} // Bind nilai input dengan state
+                        value={searchValue}
                         onChange={handleSearchChange}
-                        className="block rounded-xl w-full border lg:p-2 p-1.5 lg:pl-10 pl-8 text-sm text-gray-900 focus:border-[#6E205E] focus:ring-[#6E205E] focus:outline-none focus:ring focus:ring-opacity-5"
+                        onClick={() => setIsSearchExpanded(true)} // Mengatur lebar elemen saat diklik
+                        onBlur={() => setIsSearchExpanded(false)} // Mengatur ulang lebar elemen saat kehilangan fokus
+                        className={`block rounded-xl border lg:p-2 p-1.5 lg:pl-10 pl-8 text-sm text-gray-900 focus:border-[#6E205E] focus:ring-[#6E205E] focus:outline-none focus:ring focus:ring-opacity-5 ${
+                          isSearchExpanded ? "w-full p-2.5" : "w-full" // Mengatur lebar elemen sesuai dengan state isSearchExpanded
+                        }`}
                         placeholder="Search"
                       />
+
                       {searchValue && ( // Tampilkan tombol "X" hanya jika ada teks pencarian
                         <button
                           type="button"
@@ -412,28 +451,46 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
                   </>
                 )}
               </div>
-              <div className="md:hidden ">
-                <button
-                  onClick={toggleMenu}
-                  className="text-white hover:text-gray-300 focus:outline-none focus:text-white mt-4"
-                >
-                  <svg
-                    className="h-8 w-8 "
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+              {!isSearchExpanded && ( // Tombol akan ditampilkan hanya jika isSearchExpanded adalah false
+                <div className="md:hidden">
+                  <button
+                    onClick={() => {
+                      toggleMenu();
+                    }}
+                    className="text-white hover:text-gray-300 focus:outline-none focus:text-white mt-1.5"
                   >
                     {isOpen ? (
-                      <path d="M6 18L18 6M6 6l12 12"></path>
+                      <svg
+                        className="h-8 w-8 "
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path d="M6 18L18 6M6 6l12 12"></path>
+                      </svg>
                     ) : (
-                      <path d="M4 6h16M4 12h16M4 18h16"></path>
+                      <svg
+                        className="h-8 w-8 "
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        {isOpen ? (
+                          <path d="M6 18L18 6M6 6l12 12"></path>
+                        ) : (
+                          <path d="M4 6h16M4 12h16M4 18h16"></path>
+                        )}
+                      </svg>
                     )}
-                  </svg>
-                </button>
-              </div>
+                  </button>
+                </div>
+              )}
             </div>
 
             {isOpen && (

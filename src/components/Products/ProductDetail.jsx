@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Link, Route, Routes, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Topbar from "../topbar/Topbar";
-import ProductKeranjang from "./ProductKeranjang";
 import Loading from "../Loading/Loading";
 import Swal from "sweetalert2";
 import { FaMinus, FaPlus } from "react-icons/fa";
-import Ms from "../../assets/ms.png";
 import Lg from "../../assets/logo.png";
+import { checkTokenExpiration } from "../../utils/token";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -31,7 +30,7 @@ const ProductDetail = () => {
             },
           }
         );
-        console.log(response);
+        // console.log(response);
         setDetail(response.data.data);
         setLoading(false);
       } catch (error) {
@@ -43,6 +42,7 @@ const ProductDetail = () => {
     };
     getData();
   }, [id]);
+
   const openModal = (imageUrl) => {
     // Fungsi untuk membuka modal
     const modalImage = document.getElementById("modalImage");
@@ -62,8 +62,10 @@ const ProductDetail = () => {
         const API_URL = import.meta.env.VITE_API_KEY;
         const token = localStorage.getItem("token");
 
-        const response = await axios.post(
-          `${API_URL}/api/v1/transaction-customer`,
+        const response = await axios.get(
+          // `${API_URL}/api/v1/customer-app/transaction/emenu?id=22221`,
+          `${API_URL}/api/v1/customer-app/transaction/emenu?customer_account_id=26&order=newest&per_page=8&page=1`,
+          // `${API_URL}/api/v1/customer-app/transaction/emenu?customer_account_id=26&order=newest`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -72,7 +74,7 @@ const ProductDetail = () => {
           }
         );
 
-        // console.log(response);
+        console.log("data", response);
       } catch (error) {
         if (error.response) {
           console.log(error.response.data.message);
@@ -92,9 +94,24 @@ const ProductDetail = () => {
       setQuantity(quantity - 1);
     }
   };
-
+  const navigate = useNavigate();
   const handleAddToCart = () => {
-    if (detail) {
+    checkTokenExpiration();
+    const token = localStorage.getItem("token");
+    if (!token) {
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-right",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+      });
+      Toast.fire({
+        icon: "warning",
+        text: "Anda harus Login Terlebih dahulu!",
+      });
+      navigate("/");
+    } else if (detail) {
       const itemToAdd = {
         id: detail.id,
         business_id: detail.business_id,
@@ -213,11 +230,11 @@ const ProductDetail = () => {
         </div>
       ) : (
         <div className="bg-gray-100  pt-14" key={detail.id}>
-          <div className="lg:p-12  sm:p-7 flex flex-wrap md:justify-center lg:flex-nowrap bg-white">
-            <div className="flex-wrap shadow-xl rounded-xl">
+          <div className="lg:p-12  sm:p-7 flex flex-wrap lg:justify-center md:flex-nowrap bg-white">
+            <div className="flex-wrap l">
               <img
                 src={detail.image == null ? Lg : `${API_URL}/${detail.image}`}
-                className="lg:w-72 lg:h-72 w-screen h-80 object-cover lg:rounded-lg cursor-pointer"
+                className="lg:w-72 lg:h-72 md:w-96 md:h-80 w-screen h-80  lg:rounded-xl md:rounded-xl object-cover cursor-pointer shadow-xl"
                 alt={detail.name}
                 onClick={
                   () =>

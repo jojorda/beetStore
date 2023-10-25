@@ -5,11 +5,10 @@ import Topbar from "../topbar/Topbar";
 import Swal from "sweetalert2";
 import Mt from "../../assets/mt.jpg";
 import Cr from "../../assets/cart.jpg";
-import { Link } from "react-router-dom";
-import Ms from "../../assets/ms.png";
 import Lg from "../../assets/logo.png";
 import CheckOut from "./CheckOut";
-
+import { checkTokenExpiration } from "../../utils/token";
+import { useNavigate } from "react-router-dom";
 const ProductKeranjang = () => {
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,14 +16,32 @@ const ProductKeranjang = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => {
+    checkTokenExpiration();
+    const token = localStorage.getItem("token");
+    if (!token) {
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-right",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+      });
+      Toast.fire({
+        icon: "warning",
+        text: "Anda harus Login Terlebih dahulu!",
+      });
+      navigate("/");
+    }
     setIsModalOpen(true);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
   };
+  const navigate = useNavigate();
   useEffect(() => {
     // Mengambil data dari localStorage
+
     const cartData = JSON.parse(localStorage.getItem("cart")) || [];
     setCart(cartData);
     setLoading(false);
@@ -282,7 +299,7 @@ const ProductKeranjang = () => {
           isOpen={isModalOpen}
           closeModal={closeModal}
           loading={loading}
-          content={<CheckOut isOpen={isModalOpen} closeModal={closeModal} />}
+          content={<CheckOut isOpen={isModalOpen} closeModal={closeModal}  setIsModalOpen={setIsModalOpen}/>}
         />
       )}
     </>
