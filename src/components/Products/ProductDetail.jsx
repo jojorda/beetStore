@@ -74,7 +74,7 @@ const ProductDetail = () => {
           }
         );
 
-        console.log("data", response);
+        // console.log("data", response);
       } catch (error) {
         if (error.response) {
           console.log(error.response.data.message);
@@ -115,6 +115,7 @@ const ProductDetail = () => {
       const itemToAdd = {
         id: detail.id,
         business_id: detail.business_id,
+        business: detail.Business.name,
         outlet_id: detail.outlet_id,
         name: detail.name,
         image: detail.image,

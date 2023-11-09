@@ -11,6 +11,7 @@ import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import Outlet from "../Outlet/Outlet";
 import Topbar from "../topbar/Topbar";
 import { debounce } from "lodash";
+import LoadingScreen from "../Loading/LoadingScreen";
 const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState([]);
   const [searchTermOutlet, setSearchTermOutlet] = useState([]);
@@ -133,7 +134,7 @@ const Dashboard = () => {
       />
       {loading ? (
         <div className="pt-20 flex text-center justify-center items-center h-screen">
-          <Loading />
+          <LoadingScreen />
         </div>
       ) : (
         <>

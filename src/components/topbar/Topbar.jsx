@@ -234,7 +234,7 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
           <nav className="bg-[#6E205E] shadow-md fixed w-full z-50  mx-auto px-4 sm:px-6 lg:px-8">
             <div className="lg:block md:block flex items-center justify-between h-20">
               <div className="flex items-center">
-                {isSearchExpanded ? (
+                {isMobile && isSearchExpanded ? (
                   // Logo dan tombol toggle akan disembunyikan saat isSearchExpanded true
                   <div className="w-0 h-0 overflow-hidden">
                     <img
@@ -256,7 +256,7 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
                   {" "}
                   <form
                     className={`lg:pt-0 pl-2 lg:pl-10 ${
-                      isSearchExpanded ? "pl-0 w-screen pr-8" : ""
+                      isMobile && isSearchExpanded ? "pl-0 w-screen pr-8" : ""
                     }`}
                     onSubmit={handleSubmit}
                   >
@@ -285,7 +285,9 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
                         onClick={() => setIsSearchExpanded(true)} // Mengatur lebar elemen saat diklik
                         onBlur={() => setIsSearchExpanded(false)} // Mengatur ulang lebar elemen saat kehilangan fokus
                         className={`block rounded-xl border lg:p-2 p-1.5 lg:pl-10 pl-8 text-sm text-gray-900 focus:border-[#6E205E] focus:ring-[#6E205E] focus:outline-none focus:ring focus:ring-opacity-5 ${
-                          isSearchExpanded ? "w-full p-2.5" : "w-full" // Mengatur lebar elemen sesuai dengan state isSearchExpanded
+                          isMobile && isSearchExpanded
+                            ? "w-full p-2.5"
+                            : "w-full" // Mengatur lebar elemen sesuai dengan state isSearchExpanded
                         }`}
                         placeholder="Search"
                       />
@@ -334,7 +336,7 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
                     <div
                       className={`${
                         isCartOpen
-                          ? "cart-dropdown absolute ml-20  right-0 w-96 rounded-md shadow-lg mt-3 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none overflow-y-auto cart-dropdown-animation"
+                          ? "cart-dropdown absolute ml-20 right-0 w-[450px] rounded-md shadow-lg mt-3 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none overflow-y-auto cart-dropdown-animation"
                           : "hidden"
                       }`}
                       onMouseLeave={closeCart}

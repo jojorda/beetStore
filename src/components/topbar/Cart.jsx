@@ -15,6 +15,49 @@ const Cart = () => {
   const [loading, setLoading] = useState(true);
   const API_URL = import.meta.env.VITE_API_KEY;
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedOutlets, setSelectedOutlets] = useState([]);
+  const [selectedItems, setSelectedItems] = useState({});
+
+  const toggleOutletSelection = (outletName) => {
+    setSelectedOutlets((prevSelectedOutlets) => {
+      if (prevSelectedOutlets.includes(outletName)) {
+        // Deselect outlet and remove all items from it
+        const updatedSelectedOutlets = prevSelectedOutlets.filter(
+          (outlet) => outlet !== outletName
+        );
+        const updatedSelectedItems = { ...selectedItems };
+        delete updatedSelectedItems[outletName];
+        setSelectedItems(updatedSelectedItems);
+        return updatedSelectedOutlets;
+      } else {
+        // Select outlet and add all items from it
+        const updatedSelectedOutlets = [...prevSelectedOutlets, outletName];
+        const updatedSelectedItems = { ...selectedItems };
+        const outletItems = cart.filter((item) => item.business === outletName);
+        updatedSelectedItems[outletName] = outletItems.map((item) => item.id);
+        setSelectedItems(updatedSelectedItems);
+        return updatedSelectedOutlets;
+      }
+    });
+  };
+
+  const toggleItemSelection = (outletName, itemId) => {
+    setSelectedItems((prevSelectedItems) => {
+      const updatedSelectedItems = { ...prevSelectedItems };
+      if (updatedSelectedItems[outletName]) {
+        if (updatedSelectedItems[outletName].includes(itemId)) {
+          updatedSelectedItems[outletName] = updatedSelectedItems[
+            outletName
+          ].filter((id) => id !== itemId);
+        } else {
+          updatedSelectedItems[outletName].push(itemId);
+        }
+      } else {
+        updatedSelectedItems[outletName] = [itemId];
+      }
+      return updatedSelectedItems;
+    });
+  };
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -31,16 +74,18 @@ const Cart = () => {
   }, []);
   // Fungsi untuk menghitung total harga
   const calculateTotalPrice = () => {
-    // Memeriksa apakah cart telah didefinisikan
-    if (cart) {
-      return cart.reduce(
-        (total, item) => total + item.price * item.quantity,
-        0
-      );
+    let total = 0;
+    for (const outletName in selectedItems) {
+      const selectedItemIds = selectedItems[outletName];
+      for (const itemId of selectedItemIds) {
+        const selectedItem = cart.find((item) => item.id === itemId);
+        if (selectedItem) {
+          total += selectedItem.price * selectedItem.quantity;
+        }
+      }
     }
-    return 0; // Kembalikan 0 jika cart belum didefinisikan
+    return total;
   };
-
   // Fungsi untuk menambah jumlah produk dalam keranjang
   const incrementQuantity = (item) => {
     if (cart) {
@@ -182,63 +227,102 @@ const Cart = () => {
             </div>
           ) : (
             <div>
-              {cart.map((item) => (
-                <div
-                  className="flex items-center border border-[#6E205E] rounded-lg mb-4"
-                  key={item.id}
-                >
-                  <div className="flex pl-2">
-                    {/* <img
-                      src={Ms}
-                      alt=""
-                      className="shadow w-20 h-20 border rounded-md"
-                    /> */}
-                    <img
-                      src={
-                        item.image == null ? Lg : `${API_URL}/${item.image}` // Gunakan Lg sebagai sumber gambar default jika item.image == null
-                      }
-                      alt=""
-                      className="shadow object-cover w-20 h-20 border rounded-md"
-                    />
-                  </div>
-                  <div className="flex-1 pl-3 pt-3">
-                    <div className="mb-2 text-sm font-semibold tracking-tight text-gray-900">
-                      {item.name}
+              {Array.from(new Set(cart.map((item) => item.business))).map(
+                (outletName) => (
+                  <div
+                    key={outletName}
+                    className="border p-2 mb-4  border-[#6E205E] rounded-lg mt-2"
+                  >
+                    <div className="flex items-center">
+                      <input
+                        type="checkbox"
+                        checked={selectedOutlets.includes(outletName)}
+                        onChange={() => toggleOutletSelection(outletName)}
+                        className="mr-3"
+                      />
+                      <div>
+                        <div className="text-sm font-semibold text-gray-900">
+                          Outlet {outletName}
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex items-center py-2 text-lg font-medium text-center text-gray-500">
-                      <button
-                        className={`px-3 py-1 bg-[#6E205E] rounded-full text-white text-sm ${
-                          item.quantity === 1
-                            ? "opacity-50 cursor-not-allowed"
-                            : ""
-                        }`}
-                        onClick={() => decrementQuantity(item)}
-                        disabled={item.quantity === 1}
-                      >
-                        <FaMinus />
-                      </button>
-                      <p className="font-bold pl-2 pr-2">{item.quantity}</p>
-                      <button
-                        className="px-3 py-1 bg-[#6E205E] rounded-full text-white text-sm"
-                        onClick={() => incrementQuantity(item)}
-                      >
-                        <FaPlus />
-                      </button>
-                    </div>
-                    <div className="py-2 text-lg  text-gray-500">
-                      Rp {item.price * item.quantity}
+
+                    <div>
+                      {cart
+                        .filter((item) => item.business === outletName)
+                        .map((item) => (
+                          <div
+                            className="flex mt-2 py-2 flex-wrap justify-between items-center border border-[#6E205E] rounded-lg mb-1 lg:mx-2"
+                            key={item.id}
+                          >
+                            <div className="flex items-center pl-2">
+                              <input
+                                type="checkbox"
+                                checked={
+                                  selectedItems[outletName] &&
+                                  selectedItems[outletName].includes(item.id)
+                                }
+                                onChange={() =>
+                                  toggleItemSelection(outletName, item.id)
+                                }
+                                className="mr-1"
+                              />
+                              <div>
+                                <img
+                                  src={
+                                    item.image == null
+                                      ? Lg
+                                      : `${API_URL}/${item.image}`
+                                  }
+                                  alt=""
+                                  className="shadow object-cover w-20 h-20 border rounded-md"
+                                />
+                              </div>
+                            </div>
+                            <div className="flex-1  pl-3">
+                              <div className="mb-2 text-sm font-semibold tracking-tight text-gray-900">
+                                {item.name}
+                              </div>
+                              <div className="flex items-center text-base font-medium text-center text-gray-500">
+                                <button
+                                  className={`px-2 py-0.5 bg-[#6E205E] rounded-full text-white text-xs ${
+                                    item.quantity === 1
+                                      ? "opacity-50 cursor-not-allowed"
+                                      : ""
+                                  }`}
+                                  onClick={() => decrementQuantity(item)}
+                                  disabled={item.quantity === 1}
+                                >
+                                  <FaMinus />
+                                </button>
+                                <p className="font-bold pl-2 pr-2">
+                                  {item.quantity}
+                                </p>
+                                <button
+                                  className="px-2 py-0.5 bg-[#6E205E] rounded-full text-white text-xs"
+                                  onClick={() => incrementQuantity(item)}
+                                >
+                                  <FaPlus />
+                                </button>
+                              </div>
+                              <div className="text-base text-gray-600">
+                                Rp {item.price * item.quantity}
+                              </div>
+                            </div>
+                            <div className="flex mr-3 mt-3.5">
+                              <button
+                                className="bg-[#6E205E] rounded-xl text-white font-semibold  text-xs  p-2 hover:bg-[#8f387d]"
+                                onClick={() => handleRemoveFromCart(item.id)}
+                              >
+                                <FaTrashAlt />
+                              </button>
+                            </div>
+                          </div>
+                        ))}
                     </div>
                   </div>
-                  <div className="flex mr-3">
-                    <button
-                      className="bg-[#6E205E] rounded-xl text-white font-semibold  text-sm  p-2 hover:bg-[#8f387d]"
-                      onClick={() => handleRemoveFromCart(item.id)}
-                    >
-                      <FaTrashAlt />
-                    </button>
-                  </div>
-                </div>
-              ))}
+                )
+              )}
             </div>
           )}
         </div>
@@ -247,7 +331,7 @@ const Cart = () => {
         ) : (
           <div className="text-sm">
             <div className=" w-full ">
-              <div className="border border-[#6E205E] mt-8 p-3 rounded-xl">
+              <div className="border border-[#6E205E] p-1.5 rounded-xl">
                 <div className="flex">
                   <div className=" text-gray-500  w-3/5">
                     <div>Total Harga :</div>
@@ -260,10 +344,10 @@ const Cart = () => {
 
               {/* Tombol Check Out */}
 
-              <div className="pt-10">
+              <div className="pt-2">
                 <button
                   onClick={openModal}
-                  className="bg-[#6E205E] w-full text-white px-20 py-2 rounded-2xl hover:bg-[#8f387d]"
+                  className="bg-[#6E205E] w-full text-white px-20 py-2 rounded-lg hover:bg-[#8f387d]"
                 >
                   CheckOut
                 </button>

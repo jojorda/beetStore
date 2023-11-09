@@ -6,7 +6,13 @@ import Mt from "../../assets/mt.jpg";
 import { nanoid } from "nanoid";
 import dayjs from "dayjs";
 
-function CheckOut({ isOpen, closeModal, setIsModalOpen }) {
+function CheckOut({
+  isOpen,
+  closeModal,
+  setIsModalOpen,
+  selectedItems,
+  selectedOutlets,
+}) {
   const [cart, setCart] = useState([]);
   const [payment, setPayment] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -16,7 +22,7 @@ function CheckOut({ isOpen, closeModal, setIsModalOpen }) {
   const [nominal, setNominal] = useState(0);
   const [urlVendor, setUrlVendor] = useState(""); // Mendefinisikan urlVendor sebagai state dengan nilai awal kosong
   // ...
-
+  // console.log("data", selectedOutlets);
   useEffect(() => {
     const interval = setInterval(() => {
       setCheckoutTime(new Date());
@@ -72,29 +78,56 @@ function CheckOut({ isOpen, closeModal, setIsModalOpen }) {
 
     fetchData();
   }, []);
-
   const calculateTotalPrice = () => {
-    return cart.reduce((total, item) => total + item.price * item.quantity, 0);
+    let total = 0;
+    cart.forEach((item) => {
+      if (
+        selectedItems.includes(item.id) &&
+        selectedOutlets.includes(item.business)
+      ) {
+        total += item.price * item.quantity;
+      }
+    });
+    return total;
   };
+  // const calculateTotalPrice = () => {
+  //   let total = 0;
+
+  //   // Iterasi melalui selectedItems
+  //   for (const outletName in selectedItems) {
+  //     const selectedItemIds = selectedItems[outletName];
+  //     for (const itemId of selectedItemIds) {
+  //       // Temukan item yang sesuai dengan itemId
+  //       const selectedItem = cart.find((item) => item.id === itemId);
+
+  //       if (selectedItem) {
+  //         total += selectedItem.price * selectedItem.quantity;
+  //       }
+  //     }
+  //   }
+
+  //   return total;
+  // };
 
   const handlePayment4 = async (nominal) => {
     try {
       setLoading1(true);
       const API_URL = import.meta.env.VITE_API_KEY;
       const cartData = JSON.parse(localStorage.getItem("cart")) || [];
-
-      const businessId = cartData.map((item) => item.business_id);
+  
+      // Menghitung total pembayaran berdasarkan item yang dipilih
+      const selectedItemsArray = cartData.filter((item) =>
+        allSelectedItems.includes(item.id)
+      );
+      const totalAmount = selectedItemsArray.reduce(
+        (total, item) => total + item.price * item.quantity,
+        0
+      );
+      const businessId = selectedItemsArray[0].business_id;
       const response = await axios.get(
         `${API_URL}/api/v1/business-noverify/${businessId}`
       );
       const dataBusiness = response.data.data;
-
-      // Mengambil data dari localStorage
-      const totalAmount = cartData.reduce(
-        (total, item) => total + item.price * item.quantity,
-        0
-      );
-
       const generateSignature = {
         data: {
           request: {
@@ -109,52 +142,41 @@ function CheckOut({ isOpen, closeModal, setIsModalOpen }) {
             callbackSuccess: "",
             callbackFailure: "",
             message: "",
-            description: "Test Transaction",
+            description: "Transaction",
             transactionUsername: dataBusiness.cz_user,
           },
         },
         signature: "",
       };
-
       const resSignature = await axios.post(
         "https://api.beetpos.com/api/v1/signature/generate",
         generateSignature
       );
-      console.log("coba", resSignature);
       generateSignature.signature = resSignature.data.data[0].result;
-
+  
       const generateUrlVendor = await axios.post(
         `${API_URL}/api/v1/signature/generate-url-vendor`,
         generateSignature
       );
-      console.log("data", generateUrlVendor);
-      const responsPembayaran = resSignature.data; // Contoh: { status: 'success' }
-      // Gantilah responsPembayaran sesuai dengan struktur respons aktual yang Anda terima
-
-      if (responsPembayaran.status === "success") {
-        // Transaksi berhasil, lakukan tindakan yang sesuai
-        console.log("Transaksi berhasil!");
-        // Tutup modal
-        closeModal();
-        // Hapus cart dari localStorage
-        localStorage.removeItem("cart");
+  
+      if (generateUrlVendor.data && generateUrlVendor.data.data.response) {
+        setLoading1(false);
+        const urlVendor = generateUrlVendor.data.data.response.generatedUrl;
+        setUrlVendor(urlVendor);
       } else {
-        // Transaksi gagal atau respons tidak jelas
-        console.log("Transaksi gagal atau respons tidak jelas.");
+        setLoading1(false);
+        // Menampilkan pesan kesalahan jika URL vendor tidak ditemukan
+        Swal.fire({
+          icon: "error",
+          title: "Kesalahan",
+          text: "Tidak dapat menghasilkan URL vendor. Silakan coba lagi nanti.",
+        });
       }
-
-      setLoading1(false);
-
-      const urlVendor = generateUrlVendor.data.data.response.generatedUrl;
-      setUrlVendor(urlVendor);
-
-      // Setelah transaksi berhasil, tutup modal
-      closeModal();
     } catch (error) {
       console.log(error);
     }
   };
-
+  
   const handlePayment = () => {
     Swal.fire({
       imageUrl: Mt,
@@ -324,7 +346,11 @@ function CheckOut({ isOpen, closeModal, setIsModalOpen }) {
       console.error("Error:", error);
     }
   };
-
+  const allSelectedItems = Object.values(selectedItems).flat();
+  const selectedItemsData = cart.filter((item) =>
+    selectedItems.includes(item.id)
+  );
+  // console.log(selectedItemsData);
   return (
     <div>
       {isOpen && (
@@ -367,30 +393,31 @@ function CheckOut({ isOpen, closeModal, setIsModalOpen }) {
                   </>
                 ) : (
                   <div className="overflow-auto">
-                    {/* Konten lainnya */}
                     <div className="mb-4 md:space-x-8">
-                      <div className="">
-                        <h2 className="text-xl font-semibold mb-2">
-                          Ringkasan Pesanan
-                        </h2>
-                        <div className="bg-gray-100 p-4 rounded-lg">
-                          {cart.map((item) => (
-                            <div
+                      <div className="bg-gray-300 p-3 rounded-lg">
+                        <div className="font-semibold text-lg mb-3">
+                          {/* {outletName} */}
+                          {selectedOutlets}
+                        </div>
+                        <ul>
+                          {selectedItemsData.map((item) => (
+                            <li
                               key={item.id}
-                              className="flex justify-between mb-2"
+                              className="flex justify-between pl-2"
                             >
                               <span>{item.name}</span>
                               <span>
                                 {item.quantity} x Rp {item.price}
                               </span>
-                            </div>
+                            </li>
                           ))}
-                          <hr className="my-2" />
-                          <div className="flex justify-between">
-                            <span className="font-semibold">Total Harga:</span>
-                            <span>Rp {calculateTotalPrice()}</span>
-                          </div>
-                        </div>
+                        </ul>
+                      </div>
+
+                      {/* <hr className="" /> */}
+                      <div className="flex justify-between pr-3 pt-2">
+                        <span className="font-semibold">Total Harga:</span>
+                        <span>Rp {calculateTotalPrice()}</span>
                       </div>
                     </div>
 
