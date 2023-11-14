@@ -4,12 +4,14 @@ import {
   FaShoppingCart,
   FaThLarge,
   FaUserAlt,
+  FaHistory,
 } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { CgLogOut } from "react-icons/cg";
 import Swal from "sweetalert2";
 import axios from "axios";
 import Lg from "../../assets/lg.png";
+import Mt from "../../assets/mt.jpg";
 import Cart from "./Cart";
 import "animate.css/animate.min.css"; // Impor animate.css
 
@@ -20,6 +22,7 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
   const [cart, setCart] = useState([]);
   const [searchValue, setSearchValue] = useState(""); // State untuk nilai pencarian
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isOpenUser, setIsOpenUser] = useState(false);
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 448);
@@ -60,9 +63,14 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
   const toggleCart = () => {
     setIsCartOpen(!isCartOpen);
   };
-
   const closeCart = () => {
     setIsCartOpen(false);
+  };
+  const toggleHistory = () => {
+    setIsHistoryOpen(!isHistoryOpen);
+  };
+  const closeHistory = () => {
+    setIsHistoryOpen(false);
   };
 
   // const handleClick1 = () => {
@@ -347,6 +355,36 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
                     </div>
                   </div>
                 </div>
+                <div className="text-2xl hidden md:block ml-5">
+                  <div className="relative inline-block text-left">
+                    <Link
+                      to={"/history"}
+                      onMouseEnter={toggleHistory}
+                      className="text-white px-4 py-2 rounded-md  focus:outline-none hover:text-gray-200"
+                    >
+                      <FaHistory />
+                    </Link>
+                    <div
+                      className={`${
+                        isHistoryOpen
+                          ? "cart-dropdown absolute ml-20 right-0 w-[450px] rounded-md shadow-lg mt-3 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none overflow-y-auto cart-dropdown-animation"
+                          : "hidden"
+                      }`}
+                      onMouseLeave={closeHistory}
+                    >
+                      <div className="cart-items flex justify-center text-center p-4 text-sm">
+                        <div clasName="text-center">
+                          {" "}
+                          <img src={Mt} className="bg-transparent" />
+                          <div className="text-gray-500 font-semibold">
+                            Fitur ini masih dalam pengembangan.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="p-5 pt-4 text-gray-400 text-2xl hidden md:block md:mr-3">
                   |
                 </div>
@@ -521,6 +559,17 @@ const Topbar = ({ detail, outlet, products, setSearchTermOutlet, loading }) => {
                       <FaShoppingCart />
                     </div>{" "}
                     <div className="pl-2">Keranjang</div>
+                  </Link>
+                  <Link
+                    to={"/history"}
+                    className={`text-white hover:bg-[#853074] hover:text-white flex px-3 py-2 rounded-md text-base font-medium ${
+                      location.pathname === "/history" ? "bg-[#853074]" : ""
+                    }`}
+                  >
+                    <div className="mt-1">
+                      <FaHistory />
+                    </div>{" "}
+                    <div className="pl-2">History Transaksi</div>
                   </Link>
 
                   {user.length ? (

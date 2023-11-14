@@ -11,37 +11,44 @@ const Category = ({ selectedCategory, setSelectedCategory }) => {
   const [categoryData, setCategoryData] = useState([]);
   const { id } = useParams();
 
-  // useEffect(() => {
-  //   const getData = async () => {
-  //     try {
-  //       const API_URL = import.meta.env.VITE_API_KEY;
-  //       const token = localStorage.getItem("token");
-  //       const response = await axios.get(`${API_URL}/api/v1/product-category`, {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       });
-  //       // setCategoryData(response.data.data);
-  //     } catch (error) {
-  //       if (error.response) {
-  //         console.log(error.response.data.message);
-  //       }
-  //     }
-  //   };
-  //   getData();
-  // }, [id]);
   useEffect(() => {
     const getData = async () => {
       try {
         const API_URL = import.meta.env.VITE_API_KEY;
         const token = localStorage.getItem("token");
-        const response = await axios.get(`${API_URL}/api/v1/product/beetstore?business_id=${id}`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.get(
+          `${API_URL}/api/v1/customer-app/transaction/emenu?customer_account_id=26&order=newest`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log(response);
+        // setCategoryData(response.data.data);
+      } catch (error) {
+        if (error.response) {
+          console.log(error.response.data.message);
+        }
+      }
+    };
+    getData();
+  }, [id]);
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const API_URL = import.meta.env.VITE_API_KEY;
+        const token = localStorage.getItem("token");
+        const response = await axios.get(
+          `${API_URL}/api/v1/product/beetstore?business_id=${id}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         // console.log(response.data.data)
         setCategoryData(response.data.data);
       } catch (error) {
@@ -52,9 +59,13 @@ const Category = ({ selectedCategory, setSelectedCategory }) => {
     };
     getData();
   }, [id]);
-  const uniqueCategories = categoryData.filter((category, index, self) =>
-  index === self.findIndex((c) => c.Product_Category?.name === category.Product_Category?.name)
-);
+  const uniqueCategories = categoryData.filter(
+    (category, index, self) =>
+      index ===
+      self.findIndex(
+        (c) => c.Product_Category?.name === category.Product_Category?.name
+      )
+  );
   return (
     <>
       <div className="lg:p-10 p-5 shadow mb-5">
@@ -102,12 +113,15 @@ const Category = ({ selectedCategory, setSelectedCategory }) => {
                   <div className="mr-10">
                     <div
                       className={`bg-gray-100 text-sm lowercase cursor-pointer hover:bg-gray-300 rounded-2xl p-2 pl-3 pr-3 text-center ${
-                        selectedCategory === category.Product_Category?.name.toLowerCase()
+                        selectedCategory ===
+                        category.Product_Category?.name.toLowerCase()
                           ? "text-[#6E205E]"
                           : ""
                       }`}
                       onClick={() =>
-                        setSelectedCategory(category.Product_Category?.name.toLowerCase())
+                        setSelectedCategory(
+                          category.Product_Category?.name.toLowerCase()
+                        )
                       }
                     >
                       {category.Product_Category?.name}

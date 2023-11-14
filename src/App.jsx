@@ -10,6 +10,7 @@ import Profile from "./pages/Account/Profile";
 import CheckOut from "./pages/Products/CheckOut";
 import NewPassword from "./Auth/NewPassword";
 import LoadingScreen from "./components/Loading/LoadingScreen";
+import HistoryTrans from "./pages/History/HistoryTrans";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -46,6 +47,7 @@ function App() {
             />
             <Route exact path="/profile/:id" element={<Profile />} />
             <Route exact path="/CheckOut" element={<CheckOut />} />
+            <Route exact path="/history" element={<HistoryTrans />} />
           </Routes>
         )}
       </BrowserRouter>

@@ -114,7 +114,7 @@ function CheckOut({
       setLoading1(true);
       const API_URL = import.meta.env.VITE_API_KEY;
       const cartData = JSON.parse(localStorage.getItem("cart")) || [];
-  
+
       // Menghitung total pembayaran berdasarkan item yang dipilih
       const selectedItemsArray = cartData.filter((item) =>
         allSelectedItems.includes(item.id)
@@ -148,17 +148,30 @@ function CheckOut({
         },
         signature: "",
       };
+      // const token = localStorage.getItem("token");
+      // const resTransaction = await axios.post(
+      //   `${API_URL}/api/v1/transaction-customer`,
+      //   generateSignature,
+      //   {
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //       Authorization: `Bearer ${token}`,
+      //     },
+      //   }
+      // );
+
+      // console.log("response transaction", resTransaction.data.data);
       const resSignature = await axios.post(
         "https://api.beetpos.com/api/v1/signature/generate",
         generateSignature
       );
       generateSignature.signature = resSignature.data.data[0].result;
-  
+
       const generateUrlVendor = await axios.post(
         `${API_URL}/api/v1/signature/generate-url-vendor`,
         generateSignature
       );
-  
+
       if (generateUrlVendor.data && generateUrlVendor.data.data.response) {
         setLoading1(false);
         const urlVendor = generateUrlVendor.data.data.response.generatedUrl;
@@ -176,7 +189,7 @@ function CheckOut({
       console.log(error);
     }
   };
-  
+
   const handlePayment = () => {
     Swal.fire({
       imageUrl: Mt,

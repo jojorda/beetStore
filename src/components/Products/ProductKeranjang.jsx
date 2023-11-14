@@ -74,7 +74,7 @@ const ProductKeranjang = () => {
       }
     }
   };
-
+// 
   // const handleOutletSelection = (outletName) => {
   //   if (selectedOutlets.includes(outletName)) {
   //     // Outlet sudah dipilih, hilangkan dari daftar pemilihan

@@ -10,57 +10,110 @@ import Ms from "../../assets/ms.png";
 import Lg from "../../assets/logo.png";
 import CheckOut from "../Products/CheckOut";
 
+import { checkTokenExpiration } from "../../utils/token";
+
 const Cart = () => {
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(true);
   const API_URL = import.meta.env.VITE_API_KEY;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOutlets, setSelectedOutlets] = useState([]);
-  const [selectedItems, setSelectedItems] = useState({});
+  const [selectedItems, setSelectedItems] = useState([]);
 
-  const toggleOutletSelection = (outletName) => {
-    setSelectedOutlets((prevSelectedOutlets) => {
-      if (prevSelectedOutlets.includes(outletName)) {
-        // Deselect outlet and remove all items from it
-        const updatedSelectedOutlets = prevSelectedOutlets.filter(
-          (outlet) => outlet !== outletName
-        );
-        const updatedSelectedItems = { ...selectedItems };
-        delete updatedSelectedItems[outletName];
-        setSelectedItems(updatedSelectedItems);
-        return updatedSelectedOutlets;
-      } else {
-        // Select outlet and add all items from it
-        const updatedSelectedOutlets = [...prevSelectedOutlets, outletName];
-        const updatedSelectedItems = { ...selectedItems };
-        const outletItems = cart.filter((item) => item.business === outletName);
-        updatedSelectedItems[outletName] = outletItems.map((item) => item.id);
-        setSelectedItems(updatedSelectedItems);
-        return updatedSelectedOutlets;
-      }
-    });
+  const handleOutletSelection = (outletName) => {
+    if (selectedOutlets.includes(outletName)) {
+      setSelectedOutlets(
+        selectedOutlets.filter((outlet) => outlet !== outletName)
+      );
+      setSelectedItems((prevSelectedItems) =>
+        prevSelectedItems.filter(
+          (itemId) =>
+            !cart.find(
+              (item) => item.id === itemId && item.business === outletName
+            )
+        )
+      );
+    } else {
+      setSelectedOutlets([...selectedOutlets, outletName]);
+      setSelectedItems((prevSelectedItems) =>
+        prevSelectedItems.concat(
+          cart
+            .filter((item) => item.business === outletName)
+            .map((item) => item.id)
+        )
+      );
+    }
   };
 
-  const toggleItemSelection = (outletName, itemId) => {
-    setSelectedItems((prevSelectedItems) => {
-      const updatedSelectedItems = { ...prevSelectedItems };
-      if (updatedSelectedItems[outletName]) {
-        if (updatedSelectedItems[outletName].includes(itemId)) {
-          updatedSelectedItems[outletName] = updatedSelectedItems[
-            outletName
-          ].filter((id) => id !== itemId);
-        } else {
-          updatedSelectedItems[outletName].push(itemId);
+  const handleItemSelection = (itemId) => {
+    const item = cart.find((cartItem) => cartItem.id === itemId);
+    if (item) {
+      if (selectedItems.includes(itemId)) {
+        setSelectedItems(
+          selectedItems.filter((selectedItemId) => selectedItemId !== itemId)
+        );
+
+        // Cek apakah masih ada item lain dalam outlet yang dipilih, jika tidak, batalkan pemilihan outlet
+        if (
+          !selectedItems.some((selectedItemId) =>
+            cart.find(
+              (cartItem) =>
+                cartItem.business === item.business && selectedItemId !== itemId
+            )
+          )
+        ) {
+          setSelectedOutlets(
+            selectedOutlets.filter((outlet) => outlet !== item.business)
+          );
         }
       } else {
-        updatedSelectedItems[outletName] = [itemId];
+        setSelectedItems([...selectedItems, itemId]);
+
+        // Pilih outlet secara otomatis jika belum dipilih
+        if (!selectedOutlets.includes(item.business)) {
+          setSelectedOutlets([...selectedOutlets, item.business]);
+        }
       }
-      return updatedSelectedItems;
-    });
+    }
   };
 
   const openModal = () => {
-    setIsModalOpen(true);
+    checkTokenExpiration();
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-right",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+      });
+      Toast.fire({
+        icon: "warning",
+        text: "Anda harus Login Terlebih dahulu!",
+      });
+      navigate("/");
+    } else {
+      const selectedOutletNames = Object.keys(selectedOutlets);
+      // console.log(selectedOutletNames)
+      if (selectedOutletNames.length === 0) {
+        Swal.fire({
+          icon: "error",
+          title: "Peringatan",
+          text: "Anda harus memilih setidaknya satu item untuk checkout.",
+        });
+      } else if (selectedOutletNames.length > 1) {
+        Swal.fire({
+          icon: "error",
+          title: "Peringatan",
+          text: "Anda hanya dapat checkout dari satu outlet pada satu waktu.",
+        });
+      } else {
+        // Izinkan untuk membuka modal jika semua kondisi telah terpenuhi
+        setIsModalOpen(true);
+      }
+    }
   };
 
   const closeModal = () => {
@@ -75,17 +128,17 @@ const Cart = () => {
   // Fungsi untuk menghitung total harga
   const calculateTotalPrice = () => {
     let total = 0;
-    for (const outletName in selectedItems) {
-      const selectedItemIds = selectedItems[outletName];
-      for (const itemId of selectedItemIds) {
-        const selectedItem = cart.find((item) => item.id === itemId);
-        if (selectedItem) {
-          total += selectedItem.price * selectedItem.quantity;
-        }
+    cart.forEach((item) => {
+      if (
+        selectedItems.includes(item.id) &&
+        selectedOutlets.includes(item.business)
+      ) {
+        total += item.price * item.quantity;
       }
-    }
+    });
     return total;
   };
+
   // Fungsi untuk menambah jumlah produk dalam keranjang
   const incrementQuantity = (item) => {
     if (cart) {
@@ -228,44 +281,57 @@ const Cart = () => {
           ) : (
             <div>
               {Array.from(new Set(cart.map((item) => item.business))).map(
-                (outletName) => (
-                  <div
-                    key={outletName}
-                    className="border p-2 mb-4  border-[#6E205E] rounded-lg mt-2"
-                  >
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        checked={selectedOutlets.includes(outletName)}
-                        onChange={() => toggleOutletSelection(outletName)}
-                        className="mr-3"
-                      />
-                      <div>
-                        <div className="text-sm font-semibold text-gray-900">
-                          Outlet {outletName}
+                (outletName) => {
+                  const filteredItems = cart.filter((item) => {
+                    return item.business === outletName && item.business_id;
+                  });
+                  const groupedItems = {};
+
+                  cart.forEach((item) => {
+                    if (item.business === outletName) {
+                      if (!groupedItems[item.business_id]) {
+                        groupedItems[item.business_id] = [];
+                      }
+                      groupedItems[item.business_id].push(item.business_id);
+                    }
+                  });
+
+                  const businessIds = Object.keys(groupedItems);
+
+                  return (
+                    <div
+                      key={outletName}
+                      className="border p-2 mb-4  border-[#6E205E] rounded-lg mt-2"
+                    >
+                      <div className="flex items-center">
+                        <input
+                          type="checkbox"
+                          className="mr-3"
+                          checked={selectedOutlets.includes(outletName)}
+                          onChange={() => handleOutletSelection(outletName)}
+                        />
+                        <div>
+                          <Link
+                            to={`/products/${businessIds}`} // Gunakan outletName dalam URL
+                            className="text-lg font-semibold text-gray-900 mt-4"
+                          >
+                            {outletName}
+                          </Link>
                         </div>
                       </div>
-                    </div>
 
-                    <div>
-                      {cart
-                        .filter((item) => item.business === outletName)
-                        .map((item) => (
+                      <div>
+                        {filteredItems.map((item) => (
                           <div
-                            className="flex mt-2 py-2 flex-wrap justify-between items-center border border-[#6E205E] rounded-lg mb-1 lg:mx-2"
+                            className="flex mt-2 py-2 flex-wrap justify-between items-center border shadow-sm shadow-[#6E205E]  rounded-lg mb-1 lg:mx-2"
                             key={item.id}
                           >
                             <div className="flex items-center pl-2">
                               <input
                                 type="checkbox"
-                                checked={
-                                  selectedItems[outletName] &&
-                                  selectedItems[outletName].includes(item.id)
-                                }
-                                onChange={() =>
-                                  toggleItemSelection(outletName, item.id)
-                                }
                                 className="mr-1"
+                                checked={selectedItems.includes(item.id)}
+                                onChange={() => handleItemSelection(item.id)}
                               />
                               <div>
                                 <img
@@ -281,7 +347,10 @@ const Cart = () => {
                             </div>
                             <div className="flex-1  pl-3">
                               <div className="mb-2 text-sm font-semibold tracking-tight text-gray-900">
-                                {item.name}
+                                <Link to={`/products/detail/${item.id}`}>
+                                  {" "}
+                                  {item.name}
+                                </Link>
                               </div>
                               <div className="flex items-center text-base font-medium text-center text-gray-500">
                                 <button
@@ -319,9 +388,10 @@ const Cart = () => {
                             </div>
                           </div>
                         ))}
+                      </div>
                     </div>
-                  </div>
-                )
+                  );
+                }
               )}
             </div>
           )}
@@ -364,11 +434,11 @@ const Cart = () => {
       </div>
       {isModalOpen && (
         <CheckOut
-          className="font-normal"
           isOpen={isModalOpen}
           closeModal={closeModal}
           loading={loading}
-          content={<CheckOut isOpen={isModalOpen} closeModal={closeModal} />}
+          selectedItems={selectedItems} // Pass selected item IDs to the Checkout component
+          selectedOutlets={selectedOutlets} // Pass selected item IDs to the Checkout component
         />
       )}
     </>
