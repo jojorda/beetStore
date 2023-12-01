@@ -256,7 +256,7 @@ const ProductDetail = () => {
               </div>
 
               <div className="inline-flex items-center lg:pt-16 md:pt-16 py-2 text-2xl font-medium text-center text-[#F20000]">
-                Rp {detail.price}
+                Rp {detail.price.toLocaleString('id-ID')}
               </div>
               <div className="lg:flex md:flex hidden  mr-5 right-0">
                 <div className="bg-[#6E205E] rounded-xl flex items-center justify-between py-2 mr-4 ">

@@ -30,9 +30,19 @@ const Dashboard = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-
-        setOutlet(response.data.data);
-        setSearchTermOutlet(response.data.data);
+        const filteredOutlet = response.data.data.filter((item) => {
+          // Memeriksa apakah semua properti tidak null
+          return (
+            item.Location !== null &&
+            item.cz_entity_id !== null &&
+            item.cz_pin !== null &&
+            item.cz_user !== null &&
+            item.cz_vendor_identifier !== null
+          );
+        });
+        // console.log(filteredOutlet)
+        setOutlet(filteredOutlet);
+        setSearchTermOutlet(filteredOutlet);
         setLoading(false);
         // console.log(response);
       } catch (error) {
@@ -85,6 +95,36 @@ const Dashboard = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+  // useEffect(() => {
+  //   const getProduct = async () => {
+  //     try {
+  //       const API_URL = import.meta.env.VITE_API_KEY;
+  //       const token = localStorage.getItem("token");
+  //       const response = await axios.get(`${API_URL}/api/v1/business`, {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }); // Filter data yang memiliki setidaknya satu nilai 'cz' tidak null di semua array
+  //       const filteredOutlet = response.data.data.filter((item) => {
+  //         // Memeriksa apakah semua properti tidak null
+  //         return (
+  //           item.cz_entity_id !== null &&
+  //           item.cz_pin !== null &&
+  //           item.cz_user !== null &&
+  //           item.cz_vendor_identifier !== null
+  //         );
+  //       });
+        
+  //       console.log(filteredOutlet);
+
+  //       console.log("filter", response);
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
+  //   getProduct();
+  // }, []);
 
   // Fungsi untuk menggulir ke atas halaman
   const scrollToTop = () => {

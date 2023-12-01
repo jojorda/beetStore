@@ -6,12 +6,12 @@ import Lg from "../../assets/logo.png";
 const ProductList_ = ({ searchTerm, selectedCategory }) => {
   const [loading, setLoading] = useState(true);
   const [showMore, setShowMore] = useState(false);
-  const itemsToShow = showMore ? searchTerm.length : 10;
+  const itemsToShow = showMore ? searchTerm.length : 12;
   const [visibleData, setVisibleData] = useState([]);
   const [showNotFound, setShowNotFound] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false); // State baru untuk loading tombol "Muat Lebih Banyak"
   const API_URL = import.meta.env.VITE_API_KEY;
-  
+
   useEffect(() => {
     const filterProductsByCategory = () => {
       if (!selectedCategory || selectedCategory === "all") {
@@ -128,7 +128,7 @@ const ProductList_ = ({ searchTerm, selectedCategory }) => {
                         </div>
 
                         <div className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-[#F20000]">
-                          Rp {item.price}
+                          Rp {item.price.toLocaleString("id-ID")}
                         </div>
                       </div>
                     </Link>
@@ -136,9 +136,7 @@ const ProductList_ = ({ searchTerm, selectedCategory }) => {
                 </div>
               )}
               <div>
-                {visibleData.length === 0 ? (
-                  ""
-                ) : (
+                {visibleData.length >= 12 && (
                   <div className="flex justify-center mt-6">
                     {visibleData.length > 3 && (
                       <div>
@@ -150,8 +148,8 @@ const ProductList_ = ({ searchTerm, selectedCategory }) => {
                             <div className="flex justify-center">
                               <div className="h-4 w-4 mt-1 mr-2 animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em] text-primary motion-reduce:animate-[spin_1.5s_linear_infinite]">
                                 {/* <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
-                              Loading...
-                            </span> */}
+                  Loading...
+                </span> */}
                               </div>
                               <div>Loading...</div>
                             </div>

@@ -78,18 +78,61 @@ function CheckOut({
 
     fetchData();
   }, []);
+
   const calculateTotalPrice = () => {
-    let total = 0;
+    let totalTax = 0;
+    let totalService = 0;
+    let totalPaymentTotal = 0;
+    let totalResultTotal = 0;
+
     cart.forEach((item) => {
       if (
         selectedItems.includes(item.id) &&
         selectedOutlets.includes(item.business)
       ) {
-        total += item.price * item.quantity;
+        const resultTotal = item.price * item.quantity;
+        const tax = Math.ceil((resultTotal * 10) / 100);
+        const service = Math.ceil((resultTotal * 5) / 100);
+        const paymentTotal = resultTotal;
+
+        // Hitung resultAmount
+        const resultTotalValue = Math.ceil(paymentTotal + tax + service);
+
+        // Accumulate totals
+        totalTax += tax;
+        totalService += service;
+        totalPaymentTotal += paymentTotal;
+        totalResultTotal += resultTotalValue;
       }
     });
-    return total;
+
+    // console.log("Total Tax:", totalTax);
+    // console.log("Total Service:", totalService);
+    // console.log("Total Payment Total:", totalPaymentTotal);
+    // console.log("Total Result Total:", totalResultTotal);
+
+    return {
+      totalTax,
+      totalService,
+      totalPaymentTotal,
+      totalResultTotal,
+    };
   };
+  const totalValues = calculateTotalPrice();
+  // console.log("data", calculateTotalPrice());
+
+  // const calculateTotalPrice = () => {
+  //   let total = 0;
+  //   cart.forEach((item) => {
+  //     if (
+  //       selectedItems.includes(item.id) &&
+  //       selectedOutlets.includes(item.business)
+  //     ) {
+  //       total += item.price * item.quantity;
+  //     }
+  //   });
+  //   return total;
+  // };
   // const calculateTotalPrice = () => {
   //   let total = 0;
 
@@ -119,15 +162,32 @@ function CheckOut({
       const selectedItemsArray = cartData.filter((item) =>
         allSelectedItems.includes(item.id)
       );
+
+      // Hitung totalAmount dari item yang dipilih
       const totalAmount = selectedItemsArray.reduce(
         (total, item) => total + item.price * item.quantity,
         0
       );
+
+      // Inisialisasi objek result
+      const result = {
+        tax: Math.ceil((totalAmount * 10) / 100), // Pajak 10% dari totalAmount
+        service: Math.ceil((totalAmount * 5) / 100), // Service 5% dari totalAmount
+        paymentTotal: totalAmount, // paymentTotal awalnya sama dengan totalAmount
+      };
+
+      // Hitung resultAmount
+      result.resultAmount = Math.ceil(
+        result.paymentTotal + result.tax + result.service
+      );
+
       const businessId = selectedItemsArray[0].business_id;
       const response = await axios.get(
         `${API_URL}/api/v1/business-noverify/${businessId}`
       );
       const dataBusiness = response.data.data;
+
+      // Update generateSignature dengan menggunakan result
       const generateSignature = {
         data: {
           request: {
@@ -138,7 +198,10 @@ function CheckOut({
             merchantName: dataBusiness.name,
             merchantDescription: "Cashlez Sunter",
             currencyCode: "IDR",
-            amount: totalAmount,
+            payment_tax: result.tax, // Gunakan result.tax
+            payment_service: result.service, // Gunakan result.service
+            payment_total: result.paymentTotal, // Gunakan result.paymentTotal
+            amount: result.resultAmount,
             callbackSuccess: "",
             callbackFailure: "",
             message: "",
@@ -148,19 +211,7 @@ function CheckOut({
         },
         signature: "",
       };
-      // const token = localStorage.getItem("token");
-      // const resTransaction = await axios.post(
-      //   `${API_URL}/api/v1/transaction-customer`,
-      //   generateSignature,
-      //   {
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //       Authorization: `Bearer ${token}`,
-      //     },
-      //   }
-      // );
-
-      // console.log("response transaction", resTransaction.data.data);
+      // console.log(generateSignature);
       const resSignature = await axios.post(
         "https://api.beetpos.com/api/v1/signature/generate",
         generateSignature
@@ -419,18 +470,41 @@ function CheckOut({
                               className="flex justify-between pl-2"
                             >
                               <span>{item.name}</span>
-                              <span>
-                                {item.quantity} x Rp {item.price}
+                              <span className="flex items-center">
+                                <span className="w-16 text-right">
+                                  {item.quantity}x
+                                </span>
+                                <span className="w-24 text-right flex-grow">
+                                  Rp. {item.price.toLocaleString("id-ID")}
+                                </span>
                               </span>
                             </li>
                           ))}
+
+                          <hr className="border-2 ml-2 border-gray-400 mb-2 mt-2 rounded-lg" />
+                          <li className="flex justify-between pl-2">
+                            <span>Tax</span>
+                            <span>
+                              Rp. {totalValues.totalTax.toLocaleString("id-ID")}
+                            </span>
+                          </li>
+                          <li className="flex justify-between pl-2">
+                            <span>Service</span>
+                            <span>
+                              Rp.{" "}
+                              {totalValues.totalService.toLocaleString("id-ID")}
+                            </span>
+                          </li>
                         </ul>
                       </div>
 
                       {/* <hr className="" /> */}
                       <div className="flex justify-between pr-3 pt-2">
                         <span className="font-semibold">Total Harga:</span>
-                        <span>Rp {calculateTotalPrice()}</span>
+                        <span>
+                          Rp.{" "}
+                          {totalValues.totalResultTotal.toLocaleString("id-ID")}
+                        </span>
                       </div>
                     </div>
 

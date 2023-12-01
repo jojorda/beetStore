@@ -108,6 +108,29 @@ const HistoryTransaksi = () => {
     fetchData(); // Call the async function to fetch data
   }, []);
 
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const API_URL = import.meta.env.VITE_API_KEY;
+        const token = localStorage.getItem("token");
+        const response = await axios.get(
+          `${API_URL}/api/v1/customer-app/transaction/emenu?customer_account_id=2`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log(response);
+        // setCategoryData(response.data.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    getData();
+  }, []);
+
   const calculateTotalPrice = () => {
     // Menghitung total harga pesanan
     if (cart) {

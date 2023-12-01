@@ -74,7 +74,7 @@ const ProductKeranjang = () => {
       }
     }
   };
-// 
+  //
   // const handleOutletSelection = (outletName) => {
   //   if (selectedOutlets.includes(outletName)) {
   //     // Outlet sudah dipilih, hilangkan dari daftar pemilihan
@@ -397,7 +397,10 @@ const ProductKeranjang = () => {
                                   </button>
                                 </div>
                                 <div className="py-2 text-lg text-gray-500">
-                                  Rp {item.price * item.quantity}
+                                  Rp{" "}
+                                  {(item.price * item.quantity).toLocaleString(
+                                    "id-ID"
+                                  )}
                                 </div>
                               </div>
                               <div className="flex justify-end mt-3 lg:mt-0 mr-3">
@@ -429,7 +432,9 @@ const ProductKeranjang = () => {
                       <div>Total Harga :</div>
                     </div>
                     <div className="">
-                      <div>Rp {calculateTotalPrice()}</div>
+                      <div>
+                        Rp {calculateTotalPrice().toLocaleString("id-ID")}
+                      </div>
                     </div>
                   </div>
                 </div>

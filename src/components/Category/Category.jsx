@@ -11,30 +11,30 @@ const Category = ({ selectedCategory, setSelectedCategory }) => {
   const [categoryData, setCategoryData] = useState([]);
   const { id } = useParams();
 
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const API_URL = import.meta.env.VITE_API_KEY;
-        const token = localStorage.getItem("token");
-        const response = await axios.get(
-          `${API_URL}/api/v1/customer-app/transaction/emenu?customer_account_id=26&order=newest`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        console.log(response);
-        // setCategoryData(response.data.data);
-      } catch (error) {
-        if (error.response) {
-          console.log(error.response.data.message);
-        }
-      }
-    };
-    getData();
-  }, [id]);
+  // useEffect(() => {
+  //   const getData = async () => {
+  //     try {
+  //       const API_URL = import.meta.env.VITE_API_KEY;
+  //       const token = localStorage.getItem("token");
+  //       const response = await axios.get(
+  //         `${API_URL}/api/v1/customer-app/transaction/emenu?customer_account_id=26&order=newest`,
+  //         {
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //             Authorization: `Bearer ${token}`,
+  //           },
+  //         }
+  //       );
+  //       console.log(response);
+  //       // setCategoryData(response.data.data);
+  //     } catch (error) {
+  //       if (error.response) {
+  //         console.log(error.response.data.message);
+  //       }
+  //     }
+  //   };
+  //   getData();
+  // }, [id]);
   useEffect(() => {
     const getData = async () => {
       try {
