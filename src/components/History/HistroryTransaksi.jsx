@@ -114,7 +114,7 @@ const HistoryTransaksi = () => {
         const API_URL = import.meta.env.VITE_API_KEY;
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          `${API_URL}/api/v1/customer-app/transaction/emenu?customer_account_id=2`,
+          `${API_URL}/api/v1/customer-app/transaction/emenu?customer_account_id=26&order=newest`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -131,6 +131,29 @@ const HistoryTransaksi = () => {
     getData();
   }, []);
 
+  const checkStatusPaymentCz = async (url) => {
+    console.log('urlnya', url);
+  
+    try {
+      const result = await axios.post('https://api-link.cashlez.com/validate_url', {
+        status: '',
+        message: '',
+        data: {
+          request: {
+            generatedUrl: url
+          }
+        }
+      });
+  
+      console.log('result.data.data', result.data.data);
+      console.log('result.data.data.response.processStatus', result.data.data.response.processStatus);
+  
+      return result.data.data;
+    } catch (error) {
+      console.error('Error in checkStatusPaymentCz:', error);
+      throw error; // You can handle errors as per your application's needs
+    }
+  };
   const calculateTotalPrice = () => {
     // Menghitung total harga pesanan
     if (cart) {
@@ -241,6 +264,7 @@ const HistoryTransaksi = () => {
           <div className="text-gray-500 font-semibold">
             Fitur ini masih dalam pengembangan.
           </div>
+          {/* <button onClick={checkStatusPaymentCz}>Klik disini </button> */}
         </div>
       </div>
     </>

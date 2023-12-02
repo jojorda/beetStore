@@ -7,6 +7,7 @@ import Lg from "../../assets/logo.png";
 import CheckOut from "./CheckOut";
 import { checkTokenExpiration } from "../../utils/token";
 import { Link, useNavigate } from "react-router-dom";
+import ProductNavbar from "../topbar/ProductNavbar";
 
 const ProductKeranjang = () => {
   const [cart, setCart] = useState([]);
@@ -273,7 +274,7 @@ const ProductKeranjang = () => {
 
   return (
     <>
-      <Topbar products={cart} loading={loading} />
+      <ProductNavbar products={cart} loading={loading} />
       <div className="pt-20">
         <div className="lg:pl-12 p-5 lg:flex-1 md:flex block">
           <div className="lg:w-2/3 md:w-2/3">
